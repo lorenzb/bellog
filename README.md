@@ -17,7 +17,7 @@ binary. Edit the file src/config and edit the line
 ```
 'XSB_PATH' : 'path to xsb'
 ```
-where you change **patht to xsb** with the path to XSB.
+where you change **path to xsb** with the path to XSB.
 
 BELLOG SYNTAX
 -------------
