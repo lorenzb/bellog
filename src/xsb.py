@@ -1,4 +1,3 @@
-from ConfigParser import ConfigParser
 import pexpect
 from parser import Parser
 from config import config
@@ -14,14 +13,18 @@ class XSB:
         self.xsb.sendline(':- auto_table.')
         for rule in Parser.bellogRulesToDatalogRules(bellogRules):
             datalogRule = rule + '.'
-            print datalogRule
             self.xsb.sendline(datalogRule)
         self.xsb.sendline('true_bot.')
         self.xsb.sendline('true_top.')
         self.xsb.sendline('bot_bot.')
-        self.xsb.sendline('top_top.')        
-        self.xsb.sendcontrol('d')
+        self.xsb.sendline('top_top.')
+        self.xsb.sendline('bot_top :- tnot(top_top).')        
+        self.xsb.sendline('top_bot :- tnot(bot_bot).')        
+        self.xsb.sendline('false_top :- tnot(top_top).')
+        self.xsb.sendline('false_bot :- tnot(top_top).')        
+        self.xsb.sendcontrol('d')    
         self.xsb.expect('yes')
+        print 'File', filename, 'loaded'
         
     def query(self, queryString):
         atom = Atom.fromString(queryString)

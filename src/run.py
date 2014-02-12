@@ -19,7 +19,7 @@ def main():
         
     xsb = XSB()
     xsb.loadBellogProgram(bellogFilename)
-    xsb.query(queryString)
+    print 'Query', queryString, ':', xsb.query(queryString)
 
 if __name__ == '__main__':                                                                                                                     
     main()
