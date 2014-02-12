@@ -1,4 +1,5 @@
 from rule import Rule
+import sys
 
 # takes a filename as input and returns a set of rules
 class Parser:
@@ -7,9 +8,16 @@ class Parser:
     def parseFile(cls, filename):
         rules = []
         fileIn = open(filename, 'r')
+        lineCounter = 0
         for line in fileIn:
+            lineCounter += 1
             line = line.strip().replace(' ', '')
-            rules.append(Rule.fromString(line))
+            try:
+                rules.append(Rule.fromString(line))
+            except:
+                print 'Could not parse rule at line', lineCounter, ':', line
+                print 'Check your syntax'
+                sys.exit(-1)
         fileIn.close()
         return rules
     
