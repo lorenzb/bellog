@@ -4,6 +4,16 @@ from config import config
 from atom import Atom
 
 class XSB:
+    
+    STATIC_RULES = ['true_bot', 
+                    'true_top',
+                    'bot_bot', 
+                    'top_top', 
+                    'bot_top :- tnot(top_top)', 
+                    'top_bot :- tnot(bot_bot)', 
+                    'false_top :- tnot(top_top)', 
+                    'false_bot :- tnot(top_top)']
+    
     def __init__(self):       
         self.xsb = pexpect.spawn(config['XSB_PATH'])
         
@@ -14,14 +24,9 @@ class XSB:
         for rule in Parser.bellogRulesToDatalogRules(bellogRules):
             datalogRule = rule + '.'
             self.xsb.sendline(datalogRule)
-        self.xsb.sendline('true_bot.')
-        self.xsb.sendline('true_top.')
-        self.xsb.sendline('bot_bot.')
-        self.xsb.sendline('top_top.')
-        self.xsb.sendline('bot_top :- tnot(top_top).')        
-        self.xsb.sendline('top_bot :- tnot(bot_bot).')        
-        self.xsb.sendline('false_top :- tnot(top_top).')
-        self.xsb.sendline('false_bot :- tnot(top_top).')        
+        for rule in XSB.STATIC_RULES:
+            datalogRule = rule + '.'
+            self.xsb.sendline(datalogRule)
         self.xsb.sendcontrol('d')    
         self.xsb.expect('yes')
         print 'File', filename, 'loaded'
