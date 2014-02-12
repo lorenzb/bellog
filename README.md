@@ -1,4 +1,4 @@
-bellog
+BelLog
 ======
 
 Tools for the four-valued logic programming language BelLog
