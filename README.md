@@ -3,7 +3,7 @@ BelLog
 
 Tools for the four-valued logic programming language BelLog.
 
-For details of the language see http://doi.ieeecomputersociety.org/
+For details of the language see: http://dx.doi.org/10.3929/ethz-a-010045530
 
 Syntax
 

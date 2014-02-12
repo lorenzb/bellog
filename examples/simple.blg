@@ -1,0 +1,3 @@
+p(X) :- (q(X,Y) ^ !(r(X)))
+q(a,b) :- true
+r(a) :- top
