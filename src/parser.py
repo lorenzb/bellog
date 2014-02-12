@@ -5,6 +5,8 @@ class Parser:
     
     @classmethod
     def freshAtom(cls):
+        
+        pass
     
     @classmethod
     def parseFile(cls, filename):
@@ -19,11 +21,9 @@ class Parser:
     @classmethod
     def bellogRulesToDatalogRules(cls, bellogRules):
         for bellogRule in bellogRules:
-            if bellogRule.body.isAtomic:
-                print bellogRule.toDatalog('bot')
-                print bellogRule.toDatalog('top')
-            else:
-                pass
-            
+            for r in bellogRule.toDatalogRules():
+                print r
         
-Parser.parseFile('/home/ptsankov/eth/projects/kaba/code/bellog.git/examples/simple.blg')
+
+bellogRules = Parser.parseFile('/home/ptsankov/eth/projects/kaba/code/bellog.git/examples/simple.blg')
+Parser.bellogRulesToDatalogRules(bellogRules)

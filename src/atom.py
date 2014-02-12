@@ -5,6 +5,7 @@ class AtomParseException(Exception):
 
 class Atom:
     
+    FRESH_COUNT = 0
     argRE = re.compile("[a-zA-Z]\w*$")
     predRE = re.compile("[a-zA-Z]\w*$")    
     atomRE = re.compile("[a-zA-Z][a-zA-Z0-9]*(\([a-zA-Z]\w*(\,[a-zA-Z]\w*)*\))?$")
@@ -49,10 +50,14 @@ class Atom:
         for arg in self.args:
             atom.args.append(arg)
         return atom
-            
+        
+    @classmethod    
+    def freshPredSymbol(cls):
+        Atom.FRESH_COUNT += 1
+        return 'tmp' + str(Atom.FRESH_COUNT)
         
     def __str__(self):
         s = self.pred
         if len(self.args) > 0:
-            s = s + '(' + ', '.join(self.args) + ')'
+            s = s + '(' + ','.join(self.args) + ')'
         return s            

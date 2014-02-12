@@ -11,7 +11,6 @@ class Query:
         
     @classmethod
     def fromString(self, string):
-        print 'query', string
         query = Query()
         if len(string) <=0:
             raise QueryParseException, 'Cannot parse an empty query'
@@ -21,26 +20,25 @@ class Query:
             query.operator = '!'
             query.isAtomic = False
             subquery = Query.fromString(string[2:-1])
-            query.subqueries.append(subquery)
-            return query             
+            query.subqueries.append(subquery)          
         elif string[0] == '~':
             # inverted query
             query.operator = '~'
             query.isAtomic = False
             subquery = Query.fromString(string[2:-1])
             query.subqueries.append(subquery)
-            return query
         elif string[0] == '(':
             # conjunction of queries
             query.operator = '^'
             query.isAtomic = False
             for subqueryString in string[1:-1].split('^'):
                 query.subqueries.append(Query.fromString(subqueryString))
-            return query
         else:
             # atomic query
+            self.operator = ''
             query.isAtomic = True
             query.subqueries.append(Atom.fromString(string))
+        return query
             
     # returns the set of variables that appear in the query
     def vars(self):
@@ -48,3 +46,17 @@ class Query:
         for subquery in self.subqueries:
             allVars = allVars.union(subquery.vars())
         return allVars
+    
+    def __str__(self):
+        if self.isAtomic:
+            assert len(self.subqueries) == 1
+            # the subquery is an atom
+            return str(self.subqueries[0])
+        else:            
+            # we have a composite query
+            if self.operator == '^':
+                assert len(self.subqueries) >= 1                
+                return '(' + '^'.join(map(str, self.subqueries)) + ')'
+            else:
+                assert len(self.subqueries) == 1
+                return self.operator + '(' + str(self.subqueries[0]) + ')'
