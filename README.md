@@ -8,7 +8,7 @@ For details of the language see: http://dx.doi.org/10.3929/ethz-a-010045530
 Syntax
 
 ```
-<rule>    := <atom> :- <query>.
+<rule>    := <atom> :- <query>
 <query>   := <value> | <atom> | !(<query>) | ~(<query>) | (<query> [^ <query>]+)
 <atom>    := <pred>[(<arg>[,<arg>]*)]?
 <pred>    := [a-z][a-z|A-Z|0-9]*
