@@ -15,7 +15,7 @@ To use the BelLog interpreter you need to install:
 Configure the BelLog interpreter with the correct path to your XSB
 binary. Edit the file src/config and edit the line
 ```
-'XSB_PATH' : '**path to xsb**'
+'XSB_PATH' : 'path to xsb'
 ```
 where you change **patht to xsb** with the path to XSB.
 
@@ -41,9 +41,9 @@ USAGE
 
 To run the BelLog interpreter type:
 ```
-$ ./src/run.py -i <bellog file> -q <query>
+$ ./src/run.py -i bellog_file -q query
 ```
-where **bellog file** is any BelLog policy file and **query** is written
+where **bellog_file** is a BelLog policy file and **query** is written
 using the syntax of query elements; see syntax above.
 
 EXAMPLE
