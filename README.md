@@ -28,7 +28,7 @@ The syntax of policy rules is given below:
 ```
 <rule>    := <atom> :- <query>
 <query>   := <value> | <atom> | !(<query>) | ~(<query>) | (<query> ^ ... ^ <query>)
-<atom>    := <pred>[(<arg> ^ ... <arg>)]
+<atom>    := <pred>[(<arg>, ... , <arg>)]
 <pred>    := [a-z][a-z|A-Z|0-9]*
 <arg>     := <const> | <var>
 <const>   := [a-z][a-z|A-Z|0-9]*
