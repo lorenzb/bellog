@@ -62,12 +62,12 @@ $ ./src/run.py -i examples/simple.blg -q "p(a)"
 
 The use of parenthesis in queries is mandatory. For example, the policy rule
 ```
-!(q(X) ^ r(X))
+p(X) :- !(q(X) ^ r(X))
 ```
 is invalid because the rule does not have parenthesis for the
 conjunctive query. The correct query is written as:
 ```
-!((q(X) ^ r(X)))
+p(X) :- !((q(X) ^ r(X)))
 ```
 
 
