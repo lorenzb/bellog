@@ -51,14 +51,14 @@ $ ./src/run.py -i bellog_file -q query
 where **bellog_file** is a BelLog policy file and **query** is written
 using the syntax of query elements; see syntax above.
 
-### EXAMPLE
+##### EXAMPLE
 
 ```
 $ ./src/run.py -i examples/simple.blg -q "p(a)"
 ```
 ## COMMON PROBLEMS
 
-### Improper use of parenthesis
+##### Improper use of parenthesis
 
 The use of parenthesis in queries is mandatory. For example, the policy rule
 ```
