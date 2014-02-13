@@ -2,6 +2,7 @@
 import getopt
 import sys
 from xsb import XSB
+from parser import Parser
 
 def main():  
     bellogFilename = None
@@ -16,10 +17,15 @@ def main():
     if bellogFilename is None or queryString is None:
         print 'Usage: python', sys.argv[0], '-i <BelLog file> -q <query>'
         sys.exit(-1)
-        
+    
+    bellogRules = Parser.parseFile(bellogFilename)
+    for r in bellogRules:
+        print str(r)
+    '''    
     xsb = XSB()
     xsb.loadBellogProgram(bellogFilename)
     print 'Query', queryString, ':', xsb.query(queryString)
+    '''
 
 if __name__ == '__main__':                                                                                                                     
     main()

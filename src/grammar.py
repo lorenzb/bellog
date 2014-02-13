@@ -21,4 +21,8 @@ class Grammar:
     negQuery = Group(neg + left + query + right)
     invQuery = Group(inv + left + query + right)
     query << Or([atom, invQuery, negQuery, conjQuery])
-    rule = atom + arrow + query      
+    rule = atom + arrow + query
+    
+    @classmethod
+    def parseRule(cls, string):
+        return Grammar.rule.parseString(string, parseAll=True)

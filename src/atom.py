@@ -1,47 +1,19 @@
-import re
-
-class AtomParseException(Exception):
-    pass
-
 class Atom:
     
     FRESH_COUNT = 0
-    argRE = re.compile("[a-zA-Z]\w*$")
-    predRE = re.compile("[a-zA-Z]\w*$")    
-    atomRE = re.compile("[a-zA-Z][a-zA-Z0-9]*(\([a-zA-Z]\w*(\,[a-zA-Z]\w*)*\))?$")
     
-    def __init__(self):
-        self.args = []
-        
-    @classmethod
-    def fromString(cls, string):
-        if Atom.atomRE.match(string) is None:
-            raise AtomParseException, 'Error parsing atom: ' + string
-        atom = Atom()
-        if '(' in string:
-            atom.pred = string[:string.find('(')]
-            atom.args = string[string.find('(')+1:-1].split(',')                
+    def __init__(self, elements):
+        self.pred = elements[0]        
+        if len(elements) > 1:
+            # there are arguments
+            self.args = elements[1][1:-1:2]
         else:
-            atom.pred = string            
-        atom.validate()
-        return atom
-    
+            # empty arguments
+            self.args = []
+        
     # return the variables that appear in the atom
     def vars(self):
-        return {arg for arg in self.args if arg[0].isupper()}    
-            
-    def validate(self):
-        self.validateArgs()
-        self.validatePred()
-            
-    def validateArgs(self):
-        for arg in self.args:
-            if Atom.argRE.match(arg) is None:
-                raise AtomParseException, 'Error parsing arguments in atom ' + str(self)
-            
-    def validatePred(self):
-        if Atom.predRE.match(self.pred) is None:
-            raise AtomParseException, 'Error parsing predicate name of atom ' + str(self)
+        return {arg for arg in self.args if arg[0].isupper()}                
         
     def toDatalog(self, kind):
         atom = Atom()

@@ -5,16 +5,11 @@ class RuleParseException(Exception):
     pass
 
 class Rule:
-    def __init__(self):
-        pass
+    def __init__(self, elements):
+        self.head = Atom(elements[0])
+        self.body = Query(elements[2])
     
-    @classmethod
-    def fromString(cls, string):
-        rule = Rule()
-        rule.head = Atom.fromString(string.split(':-')[0])
-        rule.body = Query.fromString(string.split(':-')[1])
-        return rule
-    
+    '''
     def toDatalogRules(self):
         for kind in ['top', 'bot']:
             if self.body.isAtomic:
@@ -46,7 +41,8 @@ class Rule:
                 datalogRuleTop = str(self.head.toDatalog('top')) + ' :- tnot(' + str(freshAtom.toDatalog('bot')) + ')'
                 datalogRuleBot = str(self.head.toDatalog('bot')) + ' :- tnot(' + str(freshAtom.toDatalog('top')) + ')'
                 subqueryRule = Rule.fromString(str(freshAtom) + ':-' + str(self.body.subqueries[0]))
-                return [datalogRuleTop, datalogRuleBot] + subqueryRule.toDatalogRules()                                          
+                return [datalogRuleTop, datalogRuleBot] + subqueryRule.toDatalogRules()
+    '''                                          
                 
     def __str__(self):
         return str(self.head) + ':-' + str(self.body)

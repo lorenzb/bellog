@@ -1,5 +1,6 @@
 from rule import Rule
 import sys
+from grammar import Grammar
 
 # takes a filename as input and returns a set of rules
 class Parser:
@@ -13,7 +14,7 @@ class Parser:
             lineCounter += 1
             line = line.strip().replace(' ', '')
             try:
-                rules.append(Rule.fromString(line))
+                rules.append(Rule(Grammar.parseRule(line)))
             except:
                 print 'Could not parse rule at line', lineCounter, ':', line
                 print 'Check your syntax'
@@ -27,10 +28,3 @@ class Parser:
         for bellogRule in bellogRules:
             datalogRules += bellogRule.toDatalogRules()
         return datalogRules
-    
-    @classmethod
-    def parseConjunctedQueries(cls, string):
-        s='q(X)^(r(X)^q(X))^s(X)^(d(Y)^d(A))'
-        print s.split('^')[0]
-        
-Parser.parseConjunctedQueries('s')
