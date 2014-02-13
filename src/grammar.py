@@ -1,4 +1,4 @@
-from pyparsing import Word, Literal, srange, ZeroOrMore, Optional, OneOrMore, Forward, Group, oneOf, Or
+from pyparsing import Word, Literal, srange, ZeroOrMore, Optional, OneOrMore, Forward, Group, Or
 
 #USAGE: query.parseString('(owner(X) ^ !(grant(X,Y)) ^ true)', parseAll=True)
 

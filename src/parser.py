@@ -13,18 +13,11 @@ class Parser:
         for line in fileIn:
             lineCounter += 1
             line = line.strip().replace(' ', '')
-            try:
-                rules.append(Rule(Grammar.parseRule(line)))
-            except:
-                print 'Could not parse rule at line', lineCounter, ':', line
-                print 'Check your syntax'
-                sys.exit(-1)
+            #try:
+            rules.append(Rule.fromElements(Grammar.parseRule(line)))
+            #except:
+            #    print 'Could not parse rule at line', lineCounter, ':', line
+            #    print 'Check your syntax'
+            #    sys.exit(-1)
         fileIn.close()
         return rules
-    
-    @classmethod
-    def bellogRulesToDatalogRules(cls, bellogRules):
-        datalogRules = []
-        for bellogRule in bellogRules:
-            datalogRules += bellogRule.toDatalogRules()
-        return datalogRules

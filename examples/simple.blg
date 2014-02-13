@@ -1,3 +1,4 @@
-p(X) :- (q(X,Y) ^ !((r(X,Y)^ s(Z))))
-q(a,b) :- true
+q(a) :- true
+p(X) :- (q(X) ^ !((r(X)^ r(X))))
 r(a) :- bot
+q(b) :- true

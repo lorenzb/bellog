@@ -1,8 +1,5 @@
 from atom import Atom
 
-class QueryParseException(Exception):
-    pass
-
 class Query:
         
     def __init__(self, elements):
@@ -26,7 +23,7 @@ class Query:
         else:
             # atomic query
             self.operator = ''
-            self.subqueries.append(Atom(elements))
+            self.subqueries.append(Atom.fromElements(elements))
             
     # returns the set of variables that appear in the query
     def vars(self):

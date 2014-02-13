@@ -21,12 +21,11 @@ class XSB:
         bellogRules = Parser.parseFile(filename)
         self.xsb.sendline('[user].')
         self.xsb.sendline(':- auto_table.')
-        for rule in Parser.bellogRulesToDatalogRules(bellogRules):
-            datalogRule = rule + '.'
-            self.xsb.sendline(datalogRule)
-        for rule in XSB.STATIC_RULES:
-            datalogRule = rule + '.'
-            self.xsb.sendline(datalogRule)
+        for bellogRule in bellogRules:
+            for datalogRule in bellogRule.toDatalogRules():
+                self.xsb.sendline(datalogRule + '.')
+        for datalogRule in XSB.STATIC_RULES:           
+            self.xsb.sendline(datalogRule + '.')
         self.xsb.sendcontrol('d')    
         self.xsb.expect('yes')
         print 'File', filename, 'loaded'
