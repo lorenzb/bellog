@@ -10,7 +10,8 @@ class Rule:
     def fromElements(self, elements):
         rule = Rule()
         rule.head = Atom.fromElements(elements[0])
-        rule.body = Query(elements[2])
+        print elements[2]
+        rule.body = Query.fromElements(elements[2])
         return rule
     
     def toDatalogRules(self):

@@ -1,29 +1,45 @@
 from atom import Atom
+import copy
 
 class Query:
         
-    def __init__(self, elements):
-        self.subqueries = []
+    def __init__(self):
+        pass
+    
+    # template method that replace the "-true->" operator with a query that corresponds to this operator
+    @classmethod    
+    def getTrueOverride(self, p, q):
+        return ['!', '(', ['(', ['!', '(', ['(', ['(', p, '^', ['~', '(', p, ')'], ')'], '^', q, ')'], ')'], '^', ['!', '(', ['(', ['!', '(', ['(', p, '^', ['~', '(', p, ')'], ')'], ')'], '^', p, ')'], ')'], ')'], ')']
+        
+    @classmethod
+    def fromElements(self, elements):
+        query = Query()
+        query.subqueries = []
         if elements[0] == '!':
             # negated query
-            self.operator = '!'
-            subquery = Query(elements[2])
-            self.subqueries.append(subquery)          
+            query.operator = '!'
+            subquery = Query.fromElements(elements[2])
+            query.subqueries.append(subquery)          
         elif elements[0] == '~':
             # inverted query
-            self.operator = '~'
-            subquery = Query(elements[2])
-            self.subqueries.append(subquery)
+            query.operator = '~'
+            subquery = Query.fromElements(elements[2])
+            query.subqueries.append(subquery)
         elif elements[0] == '(':
-            # conjunction of queries
-            self.operator = '^'
-            for subqueryElements in elements[1:-1:2]:
-                subquery = Query(subqueryElements)                 
-                self.subqueries.append(subquery)
+            # infix query
+            if elements[2] == '^':
+                # conjunction            
+                query.operator = '^'
+                for subqueryElements in elements[1:-1:2]:
+                    subquery = Query.fromElements(subqueryElements)                 
+                    query.subqueries.append(subquery)
+            elif elements[2] == '-true->':
+                return Query.fromElements(Query.getTrueOverride(elements[1], elements[3]))
         else:
             # atomic query
-            self.operator = ''
-            self.subqueries.append(Atom.fromElements(elements))
+            query.operator = ''
+            query.subqueries.append(Atom.fromElements(elements))
+        return query
             
     # returns the set of variables that appear in the query
     def vars(self):

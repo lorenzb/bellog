@@ -10,6 +10,7 @@ class Grammar:
     neg = Literal('!')
     inv = Literal('~')
     arrow = Literal(':-')
+    overrideOp = Or([Literal('-false->'), Literal('-bot->'), Literal('-top->'), Literal('-true->')]) 
     pred = Word(srange("[a-z]"), srange("[a-zA-Z0-9]") )
     const = Word(srange("[a-z]"), srange("[a-zA-Z0-9]") )
     var = Word(srange("[A-Z]"), srange("[a-zA-Z0-9]") )
@@ -18,9 +19,10 @@ class Grammar:
     atom = Group(pred + Optional(args))
     query = Forward()
     conjQuery = Group(left + query + OneOrMore(conj + query) + right)
+    overrideQuery = Group(left + query + overrideOp + query + right)
     negQuery = Group(neg + left + query + right)
     invQuery = Group(inv + left + query + right)
-    query << Or([atom, invQuery, negQuery, conjQuery])
+    query << Or([atom, invQuery, negQuery, conjQuery, overrideQuery])
     rule = atom + arrow + query
     
     @classmethod

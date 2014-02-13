@@ -1,1 +1,1 @@
--i policy01.blg -q test | grep bot | wc -l
+-i policy01.blg -q test | grep test | grep bot | wc -l
