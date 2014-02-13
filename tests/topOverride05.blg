@@ -1,0 +1,3 @@
+test :- (p -top-> q)
+p :- false
+q :- true
