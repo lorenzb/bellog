@@ -22,7 +22,7 @@ where you change **path to xsb** with the path to XSB.
 BELLOG SYNTAX
 -------------
 
-A *BelLog policy* file is a file that contains one <rule> per line. 
+A **BelLog policy file** is a file that contains one **rule** per line. 
 The syntax of policy rules is given below:
 
 ```
