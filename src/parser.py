@@ -27,3 +27,10 @@ class Parser:
         for bellogRule in bellogRules:
             datalogRules += bellogRule.toDatalogRules()
         return datalogRules
+    
+    @classmethod
+    def parseConjunctedQueries(cls, string):
+        s='q(X)^(r(X)^q(X))^s(X)^(d(Y)^d(A))'
+        print s.split('^')[0]
+        
+Parser.parseConjunctedQueries('s')
