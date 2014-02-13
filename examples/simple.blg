@@ -1,3 +1,4 @@
-p(X) :- (q(X) ^ !(r(X)))
+p(X) :- (q(X) ^ !(s(X)))
 q(a) :- true
 r(a) :- bot
+s(a) :- true

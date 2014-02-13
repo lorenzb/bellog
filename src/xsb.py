@@ -2,6 +2,7 @@ import pexpect
 from parser import Parser
 from config import config
 from atom import Atom
+import sys
 
 class XSB:
     
@@ -19,6 +20,10 @@ class XSB:
         
     def loadBellogProgram(self, filename):        
         bellogRules = Parser.parseFile(filename)
+        undefinedAtoms = Atom.SYMBOLS - {r.head.pred for r in bellogRules}.union({'false', 'true', 'top', 'bot'})
+        if len(undefinedAtoms) > 0:
+            print 'The following predicate symbols have not been defined:', ', '.join(undefinedAtoms)
+            sys.exit(-1)
         self.xsb.sendline('[user].')
         self.xsb.sendline(':- auto_table.')
         for bellogRule in bellogRules:

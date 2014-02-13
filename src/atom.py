@@ -3,12 +3,14 @@ import copy
 class Atom:
     
     FRESH_COUNT = 0
+    SYMBOLS = set()
         
     def __init__(self):
         pass
         
     @classmethod
     def fromElements(self, elements):
+        Atom.SYMBOLS.add(elements[0])
         atom = Atom()
         atom.pred = elements[0]        
         if len(elements) > 1:
