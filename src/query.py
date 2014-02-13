@@ -5,11 +5,8 @@ class Query:
         
     def __init__(self):
         pass
-    
-    # template method that replace the "-true->" operator with a query that corresponds to this operator
-    @classmethod    
-    def getTrueOverride(self, p, q):
-        return ['!', '(', ['(', ['!', '(', ['(', ['(', p, '^', ['~', '(', p, ')'], ')'], '^', q, ')'], ')'], '^', ['!', '(', ['(', ['!', '(', ['(', p, '^', ['~', '(', p, ')'], ')'], ')'], '^', p, ')'], ')'], ')'], ')']
+
+        
         
     @classmethod
     def fromElements(self, elements):
@@ -33,8 +30,8 @@ class Query:
                 for subqueryElements in elements[1:-1:2]:
                     subquery = Query.fromElements(subqueryElements)                 
                     query.subqueries.append(subquery)
-            elif elements[2] == '-true->':
-                return Query.fromElements(Query.getTrueOverride(elements[1], elements[3]))
+            elif elements[2] in ['-false->', '-bot->', '-top->', '-top->']:
+                return Query.fromElements(Query.getOverride(elements[1], elements[2][1:-2], elements[3]))
         else:
             # atomic query
             query.operator = ''
@@ -55,3 +52,31 @@ class Query:
             return str(self.subqueries[0])
         else:
             return self.operator + '(' + str(self.subqueries[0]) + ')'
+        
+        
+    # Syntactic shorthands defined below
+        
+    # template method that replace the "-true->" operator with a query that corresponds to this operator
+    @classmethod    
+    def getOverride(cls, p, value, q):
+        return ['!', '(', ['(', ['!', '(', ['(', Query.getEq(p, value), '^', q, ')'], ')'], '^', ['!', '(', ['(', ['!', '(', Query.getEq(p, value), ')'], '^', p, ')'], ')'], ')'], ')']
+    
+    @classmethod
+    def getEq(cls, p, value):
+        if value == 'true':
+            return ['(', p, '^', ['~', '(', p, ')'], ')']
+        elif value == 'false':
+            return ['(', ['!', '(', p, ')'], '^', ['!', '(', ['~', '(', p, ')'], ')'], ')']
+        elif value == 'bot':
+            return ['(', Query.getEq(Query.getOr(p, 'top'), 'true'), '^', ['!', '(', Query.getEq(p, 'true'), ')'], '^', ['!', '(', Query.getEq(p, 'false'), ')'], ')']
+        elif value == 'top':
+            return ['(', Query.getEq(Query.getOr(p, 'bot'), 'true'), '^', ['!', '(', Query.getEq(p, 'true'), ')'], '^', ['!', '(', Query.getEq(p, 'false'), ')'], ')']
+        
+    @classmethod
+    def getOr(cls, p, value):
+        if value in ['bot', 'top']:
+            return ['!', '(', ['(', ['!', '(', p, ')'], '^', [value], ')'], ')']
+        elif value == 'false':
+            return ['!', '(', ['(', ['!', '(', p, ')'], '^', ['true'], ')'], ')']
+        elif value == 'true':
+            return ['!', '(', ['(', ['!', '(', p, ')'], '^', ['false'], ')'], ')']
