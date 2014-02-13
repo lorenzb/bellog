@@ -1,1 +1,8 @@
 -i policy01.blg -q test | grep test | grep bot | wc -l
+-i botOverride01.blg -q test | grep Query | grep false | wc -l
+-i botOverride02.blg -q test | grep Query | grep bot | wc -l
+-i botOverride03.blg -q test | grep Query | grep top | wc -l
+-i botOverride04.blg -q test | grep Query | grep true | wc -l
+-i botOverride05.blg -q test | grep Query | grep false | wc -l
+-i botOverride06.blg -q test | grep Query | grep top | wc -l
+-i botOverride07.blg -q test | grep Query | grep true | wc -l

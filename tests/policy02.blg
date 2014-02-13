@@ -1,0 +1,5 @@
+test :- p(a)
+p(X) :- (q(X) ^ (r(X) ^ q(X)))
+q(a) :- true
+r(a) :- bot
+q(a) :- true

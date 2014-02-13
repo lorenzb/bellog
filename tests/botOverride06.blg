@@ -1,0 +1,3 @@
+test :- (p -bot-> q)
+p :- top
+q :- bot
