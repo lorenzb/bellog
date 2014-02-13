@@ -1,12 +1,10 @@
-BelLog
-======
+# BelLog
 
 Tools for the four-valued logic programming language BelLog.
 
 For details of the language see: http://dx.doi.org/10.3929/ethz-a-010045530
 
-INSTALL
--------
+## INSTALL
 
 To use the BelLog interpreter you need to install:
 - pexpect: http://pexpect.readthedocs.org/en/latest/
@@ -19,8 +17,7 @@ binary. Edit the file src/config and edit the line
 ```
 where you change **path to xsb** with the path to XSB.
 
-BELLOG SYNTAX
--------------
+## BELLOG SYNTAX
 
 A **BelLog policy file** is a file that contains one **rule** per line. 
 The syntax of policy rules is given below:
@@ -44,6 +41,25 @@ q(a) :- true
 s(a) :- bot
 ```
 
+
+## USAGE
+
+To run the BelLog interpreter type:
+```
+$ ./src/run.py -i bellog_file -q query
+```
+where **bellog_file** is a BelLog policy file and **query** is written
+using the syntax of query elements; see syntax above.
+
+### EXAMPLE
+
+```
+$ ./src/run.py -i examples/simple.blg -q "p(a)"
+```
+## COMMON PROBLEMS
+
+### Improper use of parenthesis
+
 The use of parenthesis in queries is mandatory. For example, the policy rule
 ```
 !(q(X) ^ r(X))
@@ -55,19 +71,3 @@ conjunctive query. The correct query is written as:
 ```
 
 
-USAGE
------
-
-To run the BelLog interpreter type:
-```
-$ ./src/run.py -i bellog_file -q query
-```
-where **bellog_file** is a BelLog policy file and **query** is written
-using the syntax of query elements; see syntax above.
-
-EXAMPLE
--------
-
-```
-$ ./src/run.py -i examples/simple.blg -q "p(a)"
-```
