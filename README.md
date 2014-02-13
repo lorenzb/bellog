@@ -36,6 +36,25 @@ The syntax of policy rules is given below:
 <value>   := true | false | bot | top
 ```
 
+An example of a BelLog policy file is:
+
+```
+p(X) :- (q(X) ^ !(s(X)))
+q(a) :- true
+s(a) :- bot
+```
+
+The use of parenthesis in queries is mandatory. For example, the policy rule
+```
+!(q(X) ^ r(X))
+```
+is invalid because the rule does not have parenthesis for the
+conjunctive query. The correct query is written as:
+```
+!((q(X) ^ r(X)))
+```
+
+
 USAGE
 -----
 
