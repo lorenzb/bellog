@@ -18,8 +18,8 @@ class XSB:
     def __init__(self):       
         self.xsb = pexpect.spawn(config['XSB_PATH'])
         
-    def loadBellogProgram(self, filename):        
-        bellogRules = Parser.parseFile(filename)
+    def loadBellogProgram(self, rules):        
+        bellogRules = Parser.parseRules(rules)
         
         # check if there are any predicates that have not been defined
         undefinedAtoms = Atom.SYMBOLS - {r.head.pred for r in bellogRules}.union({'false', 'true', 'top', 'bot'})
@@ -41,7 +41,7 @@ class XSB:
         # tell XSB that we're done loading rules
         self.xsb.sendcontrol('d')    
         self.xsb.expect('yes')
-        print 'File', filename, 'loaded'
+        print 'Policy loaded'
         
     def query(self, queryString):
         atom = Atom.fromString(queryString)

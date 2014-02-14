@@ -6,19 +6,17 @@ from grammar import Grammar
 class Parser:
       
     @classmethod
-    def parseFile(cls, filename):
-        rules = []
-        fileIn = open(filename, 'r')
+    def parseRules(cls, rules):
+        bellogRules = []
         lineCounter = 0
-        for line in fileIn:
+        for r in rules:
             lineCounter += 1
-            line = line.strip().replace(' ', '')
+            r = r.strip().replace(' ', '')
             #try:
-            rules.append(Rule.fromElements(Grammar.parseRule(line)))
+            bellogRules.append(Rule.fromElements(Grammar.parseRule(r)))
             #except Exception as e:
             #    print 'Could not parse rule at line', lineCounter, ':', line
             #    print 'Check your syntax'
             #    print 'Exception', e
             #    sys.exit(-1)
-        fileIn.close()
-        return rules
+        return bellogRules
