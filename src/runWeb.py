@@ -17,7 +17,7 @@ def main():
         print "Incorrect usage"
         sys.exit(-1)
     xsb = XSB()
-    xsb.loadBellogProgram([x for x in bellogString.split(',') if x != ''])
+    xsb.loadBellogProgram([x for x in bellogString.split('<next>') if x != ''])
     print xsb.query(queryString)
 
 if __name__ == '__main__':
