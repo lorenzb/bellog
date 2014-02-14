@@ -19,7 +19,7 @@ def main():
     xsb = XSB(  )
     try:
         xsb.loadBellogProgram([x for x in bellogString.split('<next>') if x != ''])
-        print 'Query', queryString, ':', xsb.query(queryString)
+        print xsb.query(queryString)
     except Exception as e:
         print e
 
