@@ -30,7 +30,7 @@ class Query:
                 for subqueryElements in elements[1:-1:2]:
                     subquery = Query.fromElements(subqueryElements)                 
                     query.subqueries.append(subquery)
-            elif elements[2] in ['-false->', '-bot->', '-top->', '-top->']:
+            elif elements[2] in ['-false->', '-bot->', '-top->', '-true->']:
                 return Query.fromElements(Query.getOverride(elements[1], elements[2][1:-2], elements[3]))
         else:
             # atomic query
