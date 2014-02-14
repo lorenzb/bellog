@@ -19,8 +19,11 @@ def main():
       
     xsb = XSB()
     rules = open(bellogFilename, 'r').readlines()
-    xsb.loadBellogProgram(rules)
-    print 'Query', queryString, ':', xsb.query(queryString)
+    try:
+        xsb.loadBellogProgram(rules)
+        print 'Query', queryString, ':', xsb.query(queryString)
+    except Exception as e:
+        print 'Exception', e
 
 if __name__ == '__main__':                                                                                                                     
     main()

@@ -16,9 +16,12 @@ def main():
     if bellogString is None or queryString is None:
         print "Incorrect usage"
         sys.exit(-1)
-    xsb = XSB()
-    xsb.loadBellogProgram([x for x in bellogString.split('<next>') if x != ''])
-    print xsb.query(queryString)
+    xsb = XSB(  )
+    try:
+        xsb.loadBellogProgram([x for x in bellogString.split('<next>') if x != ''])
+        print 'Query', queryString, ':', xsb.query(queryString)
+    except Exception as e:
+        print 'Exception', e
 
 if __name__ == '__main__':
     main()
