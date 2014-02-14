@@ -18,6 +18,8 @@ def main():
         sys.exit(-1)
       
     xsb = XSB()
+    print 'policy', bellogString
+    print 'split', bellogString.split(',')
     xsb.loadBellogProgram(bellogString.split(','))
     print 'Query', queryString, ':', xsb.query(queryString)
 
