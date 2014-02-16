@@ -6,15 +6,15 @@
 <body>
 <script type="text/javascript">
 var example1 = "p(X,Y) :- (p(X,Z) ^ p(Z,Y))\n\
-p(X,Y) : - q(X,Y)\n\
+p(X,Y) :- q(X,Y)\n\
 q(a,b) :- true\n\
 q(b,c) :- top";
-var example2 = "pol(X,Y) :- (polLeaders(X,Y) -false-> owner(X))\n\
-polLeaders(X,Y) :- polPiet(X,Y)\n\
-polLeaders(X,Y) :- polAnn(X,Y)\n\
+var example2 = "pol(X,Y) :- (polLeaders(X,Y) -top-> owner(X))\n\
+polLeaders(X,Y) :- (polPiet(X,Y) -plus- polAnn(X,Y))\n\
 polPiet(carol,lab) :- true\n\
+polAnn(carol,lab) :- false\n\
 polAnn(dave,lab) :- true\n\
-owner(eve) :- true";
+owner(carol) :- true";
 function loadPolicy(pol) {
   document.getElementById("policy").value = pol;
 }
@@ -22,16 +22,10 @@ function loadPolicy(pol) {
 <?php 
   echo '<table style="width:300px" id="table">';
   echo '<form action="index.php" method="post">';
-#  echo '<ul>';
-#  echo '<li><a href="">Example1</a></li>';
-#  echo '<li><a href="">Example2</a></li>';
-#  echo '<li><a href="">Example3</a></li>';
-#  echo '</ul>';
   echo '<tr><td>';
   echo '<h1>BelLog Policy Interpreter</h1></td></tr><tr><td>';
   if ($_POST['policy']) {
-    #$policy = $_POST["policy"];
-    $policy = preg_replace('/\n+/', "\n", trim($_POST['policy']));
+    $policy = $_POST["policy"];
   }
   if ($_POST['query']) {
     $query = $_POST['query'];
@@ -54,14 +48,19 @@ function loadPolicy(pol) {
   echo '<input type="submit" class="gray" value="evaluates">';
   echo '<p> to : </p>';
   if ($query && $policy) {
-    $formattedPolicy = str_replace("\n", "<next>", $policy);
-    $ret = shell_exec("python src/runWeb.py -i \"$formattedPolicy\" -q \"$query\" 2>&1");
-    echo "<p id='result'>$ret</p>";
+    $policyRemovedNewLines = preg_replace('/\n+/', " ", trim($policy));
+    $ret = shell_exec("python src/runWeb.py -i \"$policyRemovedNewLines\" -q \"$query\" 2>&1");
+    $length = strlen('Error');
+    if (substr($ret, 0, $length) === 'Error') {
+      echo "<br><br><p style='color:red'>$ret</p>";
+    } else {
+      echo "<p id='result'>$ret</p>";
+    }
   }
   echo '</td></tr><tr><td>';
   echo '<br><br><br><br><p>For details on BelLog\'s syntax see: <a href="http://github.com/ptsankov/bellog/">http://github.com/ptsankov/bellog/</a></p>';
   echo '</td></tr></table>';
   echo '</form>';
-?> 
+?>
 </body>
 </html>
