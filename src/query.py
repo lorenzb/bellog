@@ -10,7 +10,6 @@ class Query:
         
     @classmethod
     def fromElements(self, elements):
-        print 'query', elements
         query = Query()
         query.subqueries = []
         if elements[0] == '!':
