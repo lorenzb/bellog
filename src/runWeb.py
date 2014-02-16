@@ -2,6 +2,7 @@
 import getopt
 import sys
 from xsb import XSB
+from policy import Policy
 
 def main():  
     policyString = None
