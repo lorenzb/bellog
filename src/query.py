@@ -4,8 +4,7 @@ class Query:
         
     def __init__(self):
         pass
-
-        
+       
         
     @classmethod
     def fromElements(self, elements):

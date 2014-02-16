@@ -1,6 +1,7 @@
 from config import config
 from atom import Atom
 import pexpect
+from grammar import Grammar
 
 class XSB:
     
@@ -34,10 +35,11 @@ class XSB:
         self.xsb.expect('yes')
         
     def query(self, queryString):
-        atom = Atom.fromString(queryString)
-        self.policy.checkIfQueryArityMatches(atom)
-        if not atom.isGround():
-            raise Exception('The query ' + str(atom) + ' is not ground.')
+        try:
+            atom = Atom.fromElements(Grammar.parseAtom(queryString), add=False)
+        except Exception:
+            raise Exception('Could not parse the query ' + queryString)
+        self.policy.checkQuery(atom)
         self.xsb.sendline(str(atom.toDatalog('bot')) + '.')
         geqBot = self.xsb.expect(['yes', 'no']) == 0
         self.xsb.sendline(str(atom.toDatalog('top')) + '.')

@@ -1,3 +1,3 @@
-p(X) :- (q(X) -times- sr(X))
-q(a) :- true
-r(a) :- top
+p(X,Y) :- (q(X,Y) -times- r(X,Y))
+q(a,b) :- true
+r(a,b) :- top

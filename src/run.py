@@ -22,11 +22,13 @@ def main():
     rules = open(bellogFilename, 'r').readlines()
     try:
         policy = Policy.fromString(open(bellogFilename, 'r').read().strip())
+        xsb.loadPolicy(policy)
+        print 'Query', queryString, ':', xsb.query(queryString)
+        xsb.close()
     except Exception as e:
         print 'Error:', e
-        sys.exit(-1)     
-    xsb.loadPolicy(policy)
-    print 'Query', queryString, ':', xsb.query(queryString)
+        xsb.close()
+        sys.exit(-1)                
 
 if __name__ == '__main__':                                                                                                                     
     main()

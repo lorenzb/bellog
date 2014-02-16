@@ -35,3 +35,7 @@ class Grammar:
     @classmethod
     def parsePolicy(cls, string):
         return Grammar.policy.parseString(string, parseAll=True)
+    
+    @classmethod
+    def parseAtom(cls, string):
+        return Grammar.atom.parseString(string, parseAll=True)[0]
