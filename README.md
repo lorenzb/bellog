@@ -23,16 +23,16 @@ A **BelLog policy file** is a file that contains one **rule** per line.
 The syntax of policy rules is given below:
 
 ```
-<rule>     := <atom> :- <query>
-<query>    := <value> | <atom> | !<query> | ~<query> | (<query> ^ ... ^ <query>) 
-              | (<query> <override> <query>)
-<override> := -false-> | -bot-> | -top-> | -true->
-<atom>     := <pred>[(<arg>, ... , <arg>)]
-<pred>     := [a-z][a-z|A-Z|0-9]*
-<arg>      := <const> | <var>
-<const>    := [a-z][a-z|A-Z|0-9]*
-<var>      := [A-Z][a-z|A-Z|0-9]*
-<value>    := true | false | bot | top
+<rule>      := <atom> :- <query>
+<query>     := <value> | <atom> | !<query> | ~<query> | (<query> ^ ... ^ <query>) 
+               | (<query> <binary op> <query>)
+<binary-op> := -plus- | -times- | -<value>-> 
+<atom>      := <pred>[(<arg>, ... , <arg>)]
+<pred>      := [a-z][a-z|A-Z|0-9]*
+<arg>       := <const> | <var>
+<const>     := [a-z][a-z|A-Z|0-9]*
+<var>       := [A-Z][a-z|A-Z|0-9]*
+<value>     := true | false | bot | top
 ```
 
 An example of a BelLog policy file is:

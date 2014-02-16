@@ -32,6 +32,10 @@ class Query:
                     query.subqueries.append(subquery)
             elif elements[2] in ['-false->', '-bot->', '-top->', '-true->']:
                 return Query.fromElements(Query.getOverride(elements[1], elements[2][1:-2], elements[3]))
+            elif elements[2] == '-plus-':
+                return Query.fromElements(Query.getPlus(elements[1], elements[3]))
+            elif elements[2] == '-times-':
+                return Query.fromElements(Query.getTimes(elements[1], elements[3]))
         else:
             # atomic query
             query.operator = ''
@@ -80,3 +84,11 @@ class Query:
             return ['!', ['(', ['!', p], '^', ['true'], ')']]
         elif value == 'true':
             return ['!', ['(', ['!', p], '^', ['false'], ')']]
+        
+    @classmethod
+    def getPlus(cls, p, q):
+        return ['!', ['(', ['!', ['(', p, '^', ['top'], ')']], '^', ['!', ['(', q, '^', ['top'], ')']], '^', ['!', ['(', p, '^', q, ')']], ')']]
+    
+    @classmethod
+    def getTimes(cls, p, q):
+        return ['!', ['(', ['!', ['(', p, '^', ['bot'], ')']], '^', ['!', ['(', q, '^', ['bot'], ')']], '^', ['!', ['(', p, '^', q, ')']], ')']]

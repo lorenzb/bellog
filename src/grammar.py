@@ -10,7 +10,9 @@ class Grammar:
     neg = Literal('!')
     inv = Literal('~')
     arrow = Literal(':-').suppress()
-    overrideOp = Or([Literal('-false->'), Literal('-bot->'), Literal('-top->'), Literal('-true->')]) 
+    overrideOp = Or([Literal('-false->'), Literal('-bot->'), Literal('-top->'), Literal('-true->')])
+    plusOp = Literal('-plus-')
+    timesOp = Literal('-times-') 
     pred = Word(srange("[a-z]"), srange("[a-zA-Z0-9]") )
     const = Word(srange("[a-z]"), srange("[a-zA-Z0-9]") )
     var = Word(srange("[A-Z]"), srange("[a-zA-Z0-9]") )
@@ -19,7 +21,7 @@ class Grammar:
     atom = Group(pred + Optional(args))
     
     unaryOperator = neg | inv
-    binaryOperator = overrideOp
+    binaryOperator = overrideOp | plusOp | timesOp
     query = Forward()    
     query << Or([atom, Group(unaryOperator + query), Group(left + query + OneOrMore(conj + query) + right), Group(left + query + binaryOperator + query + right)])
         
