@@ -31,7 +31,6 @@ class XSB:
         # tell XSB that we're done loading rules
         self.xsb.sendcontrol('d')    
         self.xsb.expect('yes')
-        print 'Policy loaded'
         
     def query(self, queryString):
         atom = Atom.fromString(queryString)
@@ -47,3 +46,6 @@ class XSB:
             return 'top'
         else:
             return 'false'
+
+    def close(self):
+        self.xsb.close()
