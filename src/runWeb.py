@@ -20,7 +20,7 @@ def main():
 
     xsb = XSB()
     try:
-        policy = Policy.fromString(policyString)
+        policy = Policy.fromString(policyString.replace('<newline>', '\n'))
         xsb.loadPolicy(policy)
         print xsb.query(queryString)
         xsb.close()
