@@ -21,12 +21,13 @@ def main():
     xsb = XSB()
     try:
         policy = Policy.fromString(policyString)
+        xsb.loadPolicy(policy)
+        print xsb.query(queryString)
+        xsb.close()
     except Exception as e:
         print 'Error:', e
-        sys.exit(-1)     
-    xsb.loadPolicy(policy)
-    print xsb.query(queryString)
-    xsb.close()
+        xsb.close()
+        sys.exit(-1)             
 
 if __name__ == '__main__':
     main()
