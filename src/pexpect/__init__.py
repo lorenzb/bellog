@@ -300,7 +300,7 @@ class spawn(object):
 
     encoding = None
 
-    def __init__(self, command, args=[], timeout=2, maxread=2000,
+    def __init__(self, command, args=[], timeout=30, maxread=2000,
         searchwindowsize=None, logfile=None, cwd=None, env=None,
         ignore_sighup=True):
 

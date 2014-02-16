@@ -21,7 +21,7 @@ def main():
         xsb.loadBellogProgram([x for x in bellogString.split('<next>') if x != ''])
         print xsb.query(queryString)
     except Exception as e:
-        print e
+        print 'Error:', e
     xsb.close()
 
 if __name__ == '__main__':
