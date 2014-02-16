@@ -36,6 +36,8 @@ class XSB:
     def query(self, queryString):
         atom = Atom.fromString(queryString)
         self.policy.checkIfQueryArityMatches(atom)
+        if not atom.isGround():
+            raise Exception('The query ' + str(atom) + ' is not ground.')
         self.xsb.sendline(str(atom.toDatalog('bot')) + '.')
         geqBot = self.xsb.expect(['yes', 'no']) == 0
         self.xsb.sendline(str(atom.toDatalog('top')) + '.')

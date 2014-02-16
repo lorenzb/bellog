@@ -47,7 +47,10 @@ class Atom:
 
     # return the variables that appear in the atom
     def vars(self):
-        return {arg for arg in self.args if arg[0].isupper()}                        
+        return {arg for arg in self.args if arg[0].isupper()}
+    
+    def isGround(self):
+        return len(self.vars()) == 0                        
         
     @classmethod    
     def freshPredSymbol(cls):
