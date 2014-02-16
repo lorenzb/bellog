@@ -1,4 +1,4 @@
-p(X) :- (q(X) ^ s(X))
+p(X) :- (q(X) -true-> s(X))
 q(a) :- true
-r(a) :- bot
+r(a) :- !bot
 s(a) :- top

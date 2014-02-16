@@ -15,7 +15,7 @@ class Atom:
         atom.pred = elements[0]        
         if len(elements) > 1:
             # there are arguments
-            atom.args = elements[1][1:-1:2]
+            atom.args = elements[1][1:-1]
         else:
             # empty arguments
             atom.args = []
