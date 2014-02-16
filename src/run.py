@@ -23,7 +23,7 @@ def main():
     try:
         policy = Policy.fromString(open(bellogFilename, 'r').read().strip())
     except Exception as e:
-        print e
+        print 'Error:', e
         sys.exit(-1)     
     xsb.loadPolicy(policy)
     print 'Query', queryString, ':', xsb.query(queryString)

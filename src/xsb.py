@@ -17,7 +17,8 @@ class XSB:
         self.xsb = pexpect.spawn(config['XSB_PATH'])
         
     def loadPolicy(self, policy):                            
-        # translate the rules to Datalog and load them into XSB    
+        # translate the rules to Datalog and load them into XSB
+        self.policy = policy    
         self.xsb.sendline('[user].')
         self.xsb.sendline(':- auto_table.')
         for rule in policy.rules:
@@ -34,6 +35,7 @@ class XSB:
         
     def query(self, queryString):
         atom = Atom.fromString(queryString)
+        self.policy.checkIfQueryArityMatches(atom)
         self.xsb.sendline(str(atom.toDatalog('bot')) + '.')
         geqBot = self.xsb.expect(['yes', 'no']) == 0
         self.xsb.sendline(str(atom.toDatalog('top')) + '.')

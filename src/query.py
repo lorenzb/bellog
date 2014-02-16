@@ -1,5 +1,4 @@
 from atom import Atom
-import copy
 
 class Query:
         
