@@ -1,3 +1,4 @@
-p(X,Y) :- (q(X,Y) -times- r(X,Y))
+p(X,Y) :- (p(X,Z) ^ !p(Z,Y))
+p(X,Y) :- q(X,Y)
 q(a,b) :- true
-r(a,b) :- top
+q(b,c) :- bot

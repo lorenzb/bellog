@@ -41,10 +41,10 @@ class Query:
         return query
             
     # returns the set of variables that appear in the query
-    def vars(self):
-        allVars = set()
+    def getArgs(self):
+        allVars = []
         for subquery in self.subqueries:
-            allVars = allVars.union(subquery.vars())
+            allVars = allVars + subquery.getArgs()
         return allVars
     
     def __str__(self):
