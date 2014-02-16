@@ -1,7 +1,5 @@
-from parser import Parser
 from config import config
 from atom import Atom
-import sys
 import pexpect
 
 class XSB:
@@ -18,20 +16,13 @@ class XSB:
     def __init__(self):       
         self.xsb = pexpect.spawn(config['XSB_PATH'])
         
-    def loadBellogProgram(self, rules):        
-        bellogRules = Parser.parseRules(rules)
-        
-        # check if there are any predicates that have not been defined
-        undefinedAtoms = Atom.SYMBOLS - {r.head.pred for r in bellogRules}.union({'false', 'true', 'top', 'bot'})
-        if len(undefinedAtoms) > 0:
-            print 'The following predicate symbols have not been defined:', ', '.join(undefinedAtoms)
-            sys.exit(-1)
-        
-        # translate the rules to Datalog and load them into XSB    
+    def loadPolicy(self, policy):                            
+        # translate the rules to Datalog and load them into XSB
+        self.policy = policy    
         self.xsb.sendline('[user].')
         self.xsb.sendline(':- auto_table.')
-        for bellogRule in bellogRules:
-            for datalogRule in bellogRule.toDatalogRules():
+        for rule in policy.rules:
+            for datalogRule in rule.toDatalogRules():
                 self.xsb.sendline(datalogRule + '.')
                 
         # load also the static datalog rules
@@ -44,6 +35,7 @@ class XSB:
         
     def query(self, queryString):
         atom = Atom.fromString(queryString)
+        self.policy.checkIfQueryArityMatches(atom)
         self.xsb.sendline(str(atom.toDatalog('bot')) + '.')
         geqBot = self.xsb.expect(['yes', 'no']) == 0
         self.xsb.sendline(str(atom.toDatalog('top')) + '.')

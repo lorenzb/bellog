@@ -2,6 +2,7 @@
 import getopt
 import sys
 from xsb import XSB
+from policy import Policy
 
 def main():  
     bellogFilename = None
@@ -20,11 +21,12 @@ def main():
     xsb = XSB()
     rules = open(bellogFilename, 'r').readlines()
     try:
-        xsb.loadBellogProgram(rules)
-        print 'Query', queryString, ':', xsb.query(queryString)
+        policy = Policy.fromString(open(bellogFilename, 'r').read().strip())
     except Exception as e:
-        print 'Exception', e
-    xsb.close()
+        print 'Error:', e
+        sys.exit(-1)     
+    xsb.loadPolicy(policy)
+    print 'Query', queryString, ':', xsb.query(queryString)
 
 if __name__ == '__main__':                                                                                                                     
     main()

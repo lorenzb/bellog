@@ -1,4 +1,3 @@
-p(X) :- (q(X) ^ s(X))
+p(X) :- (q(X) -times- sr(X))
 q(a) :- true
-r(a) :- bot
-s(a) :- top
+r(a) :- top
