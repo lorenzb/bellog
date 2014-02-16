@@ -4,7 +4,21 @@
 <title>BelLog Interpreter</title>
 </head>
 <body>
-
+<script type="text/javascript">
+var example1 = "p(X,Y) :- (p(X,Z) ^ p(Z,Y))\n\
+p(X,Y) : - q(X,Y)\n\
+q(a,b) :- true\n\
+q(b,c) :- top";
+var example2 = "pol(X,Y) :- (polLeaders(X,Y) -false-> owner(X))\n\
+polLeaders(X,Y) :- polPiet(X,Y)\n\
+polLeaders(X,Y) :- polAnn(X,Y)\n\
+polPiet(carol,lab) :- true\n\
+polAnn(dave,lab) :- true\n\
+owner(eve) :- true";
+function loadPolicy(pol) {
+  document.getElementById("policy").value = pol;
+}
+</script>
 <?php 
   echo '<table style="width:300px" id="table">';
   echo '<form action="index.php" method="post">';
@@ -28,16 +42,17 @@
   }
   echo '</textarea>';
   echo '</td><td valign="top">';
-  echo '<input type="submit" class="gray" name="loadEx1" value="Load Example 1" onClick="this.form.policy.value=\'p(X,Y) :- (p(X,Z) ^ p(Z,Y))\np(X,Y) : - q(X,Y)\nq(a,b) :- true\nq(b,c) :- top \';"><br>';
-  echo '<input type="submit" class="gray" name="loadEx2" value="Load Example 2" onClick="this.form.policy.value=\'pol(X,Y) :- (polLeaders(X,Y) -false-> owner(X))\npolLeaders(X,Y) :- polPiet(X,Y)\npolLeaders(X,Y) :- polAnn(X,Y)\npolPiet(carol,lab) :- true\npolAnn(dave,lab) :- true\nowner(eve) :- true\';"><br>';
-  echo '</td></tr><tr><td>';
-  echo '<input id="query" type="text" name="query" placeholder="Type a request" ';
+  echo '<input type="button" class="gray" name="loadEx1" value="Load Example 1" onClick="loadPolicy(example1);">';
+  echo '<input type="button" class="gray" name="loadEx2" value="Load Example 2" onClick="loadPolicy(example2);">';
+  echo '<br></td></tr><tr><td>';
+  echo '<p>The request </p><input id="query" type="text" name="query" placeholder="Type a request" ';
   if ($query) {
     echo "value=$query>";
   } else {
     echo "value=''>";
   }
-  echo '<input type="submit" class="gray" value="Evaluate">';
+  echo '<input type="submit" class="gray" value="evaluates">';
+  echo '<p> to : </p>';
   if ($query && $policy) {
     $formattedPolicy = str_replace("\n", "<next>", $policy);
     $ret = shell_exec("python src/runWeb.py -i \"$formattedPolicy\" -q \"$query\" 2>&1");

@@ -22,6 +22,7 @@ def main():
         print xsb.query(queryString)
     except Exception as e:
         print e
+    xsb.close()
 
 if __name__ == '__main__':
     main()

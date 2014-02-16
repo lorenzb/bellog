@@ -56,3 +56,6 @@ class XSB:
             return 'top'
         else:
             return 'false'
+
+    def close(self):
+        self.xsb.close()
