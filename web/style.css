@@ -19,6 +19,7 @@ a:visited {color:#333;}  /* visited link */
 a:hover {color:#333;}  /* mouse over link */
 a:active {color:#333;}  /* selected link */
 
+
 #result {
   display: inline;
   margin-left: 20px;
@@ -59,6 +60,38 @@ a:active {color:#333;}  /* selected link */
   border-top:solid 1px #c0c0c0; 
 }
 
+.request {
+  text-indent: 0px;
+  font-weight: bold;
+}
+
+.title {
+  height: 100px;
+}
+
+.result {
+  text-indent: 5px;
+  text-transform: uppercase;
+  margin-top: 80px;
+  line-height: 30px;
+  background-color:#CCFFCC;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.error {
+  text-indent: 5px;
+  margin-top: 80px;
+  line-height: 30px;
+  background-color:#FA8072;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+textarea {
+    resize: none;
+}
+
 #policy {
   float:left; 
   width:600px; 
@@ -74,7 +107,7 @@ a:active {color:#333;}  /* selected link */
 }
 
 button.gray, a.gray, input[type=submit].gray {
-    padding: 10px 10px;
+    padding: 10px 20px;
     -webkit-border-radius: 2px 2px;
     border: solid 1px #dadada;
     background: #f4f4f4; /* Old browsers */
@@ -87,15 +120,18 @@ button.gray, a.gray, input[type=submit].gray {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#f1f1f1',GradientType=0 ); /* IE6-9 */
     color: #555;
     text-decoration: none;
+    margin-left: 50px;
     cursor: pointer;
+    text-transform: uppercase;
     display: inline-block;
     text-align: center;
-    font-weight:bold;
-    font-family:Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
     text-shadow: 0px 1px 1px rgba(255,255,255,1);
     line-height: 1;
     font-size:11px;
 }
+
 
 button.gray, a.gray, input[type=button].gray {
     padding: 10px 10px;
@@ -113,7 +149,9 @@ button.gray, a.gray, input[type=button].gray {
     text-decoration: none;
     cursor: pointer;
     display: inline-block;
+    text-transform: uppercase;
     text-align: center;
+    margin-left: 10px;
     font-weight:bold;
     font-family:Arial, Helvetica, sans-serif;
     text-shadow: 0px 1px 1px rgba(255,255,255,1);
@@ -136,3 +174,5 @@ button.gray, a.gray, input[type=button].gray {
     -moz-box-shadow: 0px 1px 1px 0px rgba(10, 10, 10, 0.4);
     box-shadow: 0px 1px 1px 0px rgba(10, 10, 10, 0.4);
 }
+
+
