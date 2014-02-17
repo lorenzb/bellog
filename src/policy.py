@@ -1,6 +1,8 @@
 from rule import Rule
 from grammar import Grammar
 from atom import Atom
+from graph import strongly_connected_components_path
+import copy
 
 class Policy:
     
@@ -17,6 +19,7 @@ class Policy:
             policy.postProcess()
         policy.checkNoEdbAtoms()
         policy.checkIdbArities()
+        policy.checkStratified()
         return policy
     
     def postProcess(self):
@@ -44,3 +47,22 @@ class Policy:
             raise Exception('Query arity mismatch. The arity of ' + str(atom) + ' in the given policy is ' + str(definedArity))        
         if not atom.isGround():
             raise Exception('The query ' + str(atom) + ' is not ground.')
+        
+    def checkStratified(self):
+        vertices = self.idbs.union({'false', 'bot' , 'top', 'true'})
+        edges = {}
+        posPreds = {}
+        negPreds = {}
+        for v in vertices:
+            posPreds[v] = set()
+            negPreds[v] = set()
+            for r in {rule for rule in self.rules if rule.head.pred == v}:
+                (pos, neg) = r.body.getPreds() 
+                posPreds[v] = posPreds[v].union(pos)
+                negPreds[v] = negPreds[v].union(neg)        
+        for v in vertices:
+            edges[v] = list(posPreds[v].union(negPreds[v]))        
+        for component in strongly_connected_components_path(vertices, edges):
+            for v in component:
+                if negPreds[v].intersection(set(component)):
+                    raise Exception('The dependent predicates ' + str(map(str, component)) + ' cannot be stratified')

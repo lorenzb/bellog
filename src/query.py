@@ -47,13 +47,28 @@ class Query:
             allVars = allVars + subquery.getArgs()
         return allVars
     
+    def getPreds(self):
+        posPreds = set()
+        negPreds = set()
+        if self.operator == '!':
+            for subquery in self.subqueries:
+                subqueryPreds = subquery.getPreds()
+                negPreds = negPreds.union(subqueryPreds[0])
+                negPreds = negPreds.union(subqueryPreds[1]) 
+        else:
+            for subquery in self.subqueries:
+                subqueryPreds = subquery.getPreds()
+                posPreds = posPreds.union(subqueryPreds[0])
+                negPreds = negPreds.union(subqueryPreds[1])   
+        return (posPreds, negPreds)
+    
     def __str__(self):
         if self.operator == '^':                
             return '(' + '^'.join(map(str, self.subqueries)) + ')'
         elif self.operator == '':
             return str(self.subqueries[0])
         else:
-            return self.operator + '(' + str(self.subqueries[0]) + ')'
+            return self.operator + '(' + str(self.subqueries[0]) + ')'            
         
         
     # Syntactic shorthands defined below

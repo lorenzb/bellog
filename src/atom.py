@@ -44,6 +44,13 @@ class Atom:
     def getArgs(self):
         return self.args
     
+    # return the variables that appear in the atom
+    def getPreds(self):
+        # atoms returns one positive atom and no negative atoms
+        s = set()
+        s.add(self.pred)
+        return (s, set())
+    
     def isGround(self):
         return len({x for x in self.args if x.isupper()}) == 0                        
         

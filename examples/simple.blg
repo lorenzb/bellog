@@ -1,4 +1,5 @@
-p(X,Y) :- (p(X,Z) ^ !p(Z,Y))
-p(X,Y) :- q(X,Y)
-q(a,b) :- true
-q(b,c) :- bot
+p(X,Y) :- (q(X,Y) ^ r(X,Y))
+r(X,Y) :- !q(X,Y)
+q(X,Y) :- p(X,Y)
+r(X,Y) :- w(X,Y)
+w(X,Y) :- true
