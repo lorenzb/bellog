@@ -23,16 +23,16 @@ A **BelLog policy file** is a file that contains one **rule** per line.
 The syntax of policy rules is given below:
 
 ```
-<rule>     := <atom> :- <query>
-<query>    := <value> | <atom> | !(<query>) | ~(<query>) | (<query> ^ ... ^ <query>) 
-              | (<query> <override> <query>)
-<override> := -false-> | -bot-> | -top-> | -true->
-<atom>     := <pred>[(<arg>, ... , <arg>)]
-<pred>     := [a-z][a-z|A-Z|0-9]*
-<arg>      := <const> | <var>
-<const>    := [a-z][a-z|A-Z|0-9]*
-<var>      := [A-Z][a-z|A-Z|0-9]*
-<value>    := true | false | bot | top
+<rule>      := <atom> :- <query>
+<query>     := <value> | <atom> | !<query> | ~<query> | (<query> ^ ... ^ <query>) 
+               | (<query> <binary op> <query>)
+<binary-op> := -plus- | -times- | -<value>-> 
+<atom>      := <pred>[(<arg>, ... , <arg>)]
+<pred>      := [a-z][a-z|A-Z|0-9]*
+<arg>       := <const> | <var>
+<const>     := [a-z][a-z|A-Z|0-9]*
+<var>       := [A-Z][a-z|A-Z|0-9]*
+<value>     := true | false | bot | top
 ```
 
 An example of a BelLog policy file is:
@@ -58,18 +58,3 @@ using the syntax of query elements; see syntax above.
 ```
 $ ./src/run.py -i examples/simple.blg -q "p(a)"
 ```
-## COMMON PROBLEMS
-
-##### Improper use of parenthesis
-
-The use of parenthesis in queries is mandatory. For example, the policy rule
-```
-p(X) :- !(q(X) ^ r(X))
-```
-is invalid because the rule does not have parenthesis for the
-conjunctive query. The correct query is written as:
-```
-p(X) :- !((q(X) ^ r(X)))
-```
-
-

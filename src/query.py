@@ -1,12 +1,10 @@
 from atom import Atom
-import copy
 
 class Query:
         
     def __init__(self):
         pass
-
-        
+       
         
     @classmethod
     def fromElements(self, elements):
@@ -15,12 +13,12 @@ class Query:
         if elements[0] == '!':
             # negated query
             query.operator = '!'
-            subquery = Query.fromElements(elements[2])
+            subquery = Query.fromElements(elements[1])
             query.subqueries.append(subquery)          
         elif elements[0] == '~':
             # inverted query
             query.operator = '~'
-            subquery = Query.fromElements(elements[2])
+            subquery = Query.fromElements(elements[1])
             query.subqueries.append(subquery)
         elif elements[0] == '(':
             # infix query
@@ -32,6 +30,10 @@ class Query:
                     query.subqueries.append(subquery)
             elif elements[2] in ['-false->', '-bot->', '-top->', '-true->']:
                 return Query.fromElements(Query.getOverride(elements[1], elements[2][1:-2], elements[3]))
+            elif elements[2] == '-plus-':
+                return Query.fromElements(Query.getPlus(elements[1], elements[3]))
+            elif elements[2] == '-times-':
+                return Query.fromElements(Query.getTimes(elements[1], elements[3]))
         else:
             # atomic query
             query.operator = ''
@@ -39,10 +41,10 @@ class Query:
         return query
             
     # returns the set of variables that appear in the query
-    def vars(self):
-        allVars = set()
+    def getArgs(self):
+        allVars = []
         for subquery in self.subqueries:
-            allVars = allVars.union(subquery.vars())
+            allVars = allVars + subquery.getArgs()
         return allVars
     
     def __str__(self):
@@ -59,24 +61,32 @@ class Query:
     # template method that replace the "-true->" operator with a query that corresponds to this operator
     @classmethod    
     def getOverride(cls, p, value, q):
-        return ['!', '(', ['(', ['!', '(', ['(', Query.getEq(p, value), '^', q, ')'], ')'], '^', ['!', '(', ['(', ['!', '(', Query.getEq(p, value), ')'], '^', p, ')'], ')'], ')'], ')']
+        return ['!', ['(', ['!', ['(', Query.getEq(p, value), '^', q, ')']], '^', ['!', ['(', ['!', Query.getEq(p, value)], '^', p, ')']], ')']]
     
     @classmethod
     def getEq(cls, p, value):
         if value == 'true':
-            return ['(', p, '^', ['~', '(', p, ')'], ')']
+            return ['(', p, '^', ['~', p], ')']
         elif value == 'false':
-            return ['(', ['!', '(', p, ')'], '^', ['!', '(', ['~', '(', p, ')'], ')'], ')']
+            return ['(', ['!', p], '^', ['!', ['~', p]], ')']
         elif value == 'bot':
-            return ['(', Query.getEq(Query.getOr(p, 'top'), 'true'), '^', ['!', '(', Query.getEq(p, 'true'), ')'], '^', ['!', '(', Query.getEq(p, 'false'), ')'], ')']
+            return ['(', Query.getEq(Query.getOr(p, 'top'), 'true'), '^', ['!', Query.getEq(p, 'true')], '^', ['!', Query.getEq(p, 'false')], ')']
         elif value == 'top':
-            return ['(', Query.getEq(Query.getOr(p, 'bot'), 'true'), '^', ['!', '(', Query.getEq(p, 'true'), ')'], '^', ['!', '(', Query.getEq(p, 'false'), ')'], ')']
+            return ['(', Query.getEq(Query.getOr(p, 'bot'), 'true'), '^', ['!', Query.getEq(p, 'true')], '^', ['!', Query.getEq(p, 'false')], ')']
         
     @classmethod
     def getOr(cls, p, value):
         if value in ['bot', 'top']:
-            return ['!', '(', ['(', ['!', '(', p, ')'], '^', [value], ')'], ')']
+            return ['!', ['(', ['!', p], '^', [value], ')']]
         elif value == 'false':
-            return ['!', '(', ['(', ['!', '(', p, ')'], '^', ['true'], ')'], ')']
+            return ['!', ['(', ['!', p], '^', ['true'], ')']]
         elif value == 'true':
-            return ['!', '(', ['(', ['!', '(', p, ')'], '^', ['false'], ')'], ')']
+            return ['!', ['(', ['!', p], '^', ['false'], ')']]
+        
+    @classmethod
+    def getPlus(cls, p, q):
+        return ['!', ['(', ['!', ['(', p, '^', ['top'], ')']], '^', ['!', ['(', q, '^', ['top'], ')']], '^', ['!', ['(', p, '^', q, ')']], ')']]
+    
+    @classmethod
+    def getTimes(cls, p, q):
+        return ['!', ['(', ['!', ['(', p, '^', ['bot'], ')']], '^', ['!', ['(', q, '^', ['bot'], ')']], '^', ['!', ['(', p, '^', q, ')']], ')']]

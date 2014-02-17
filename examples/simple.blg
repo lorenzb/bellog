@@ -1,4 +1,4 @@
-p(X) :- (q(X) ^ s(X))
-q(a) :- true
-r(a) :- bot
-s(a) :- top
+p(X,Y) :- (p(X,Z) ^ !p(Z,Y))
+p(X,Y) :- q(X,Y)
+q(a,b) :- true
+q(b,c) :- bot

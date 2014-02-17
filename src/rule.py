@@ -10,7 +10,7 @@ class Rule:
     def fromElements(self, elements):
         rule = Rule()
         rule.head = Atom.fromElements(elements[0])
-        rule.body = Query.fromElements(elements[2])
+        rule.body = Query.fromElements(elements[1])
         return rule
     
     def toDatalogRules(self):
@@ -19,7 +19,7 @@ class Rule:
             ruleBot = str(self.head.toDatalog('bot')) + ' :- ' + str(self.body.subqueries[0].toDatalog('bot'))
             return [ruleTop, ruleBot]        
         elif self.body.operator == '!':
-            freshAtom = Atom.freshWithArgs(self.body.vars())                             
+            freshAtom = Atom.freshWithArgs(self.body.getArgs())                             
             ruleTop = str(self.head.toDatalog('top')) + ' :- tnot(' + str(freshAtom.toDatalog('bot')) + ')'
             ruleBot = str(self.head.toDatalog('bot')) + ' :- tnot(' + str(freshAtom.toDatalog('top')) + ')'
             subqueryRule = Rule()
@@ -27,7 +27,7 @@ class Rule:
             subqueryRule.body = self.body.subqueries[0]             
             return [ruleTop, ruleBot] + subqueryRule.toDatalogRules()
         elif self.body.operator == '~':
-            freshAtom = Atom.freshWithArgs(self.body.vars())                             
+            freshAtom = Atom.freshWithArgs(self.body.getArgs())                             
             ruleTop = str(self.head.toDatalog('top')) + ' :- ' + str(freshAtom.toDatalog('bot'))
             ruleBot = str(self.head.toDatalog('bot')) + ' :- ' + str(freshAtom.toDatalog('top'))
             subqueryRule = Rule()
@@ -38,7 +38,7 @@ class Rule:
             freshAtoms = []
             datalogRules = []
             for subquery in self.body.subqueries:
-                freshAtom = Atom.freshWithArgs(sorted(subquery.vars()))
+                freshAtom = Atom.freshWithArgs(subquery.getArgs())
                 freshAtoms.append(freshAtom)
                 newRule = Rule()
                 newRule.head = freshAtom
