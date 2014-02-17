@@ -2,7 +2,6 @@ from rule import Rule
 from grammar import Grammar
 from atom import Atom
 from graph import strongly_connected_components_path
-import copy
 
 class Policy:
     

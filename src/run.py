@@ -19,7 +19,6 @@ def main():
         sys.exit(-1)
       
     xsb = XSB()
-    rules = open(bellogFilename, 'r').readlines()
     try:
         policy = Policy.fromString(open(bellogFilename, 'r').read().strip())
         xsb.loadPolicy(policy)
