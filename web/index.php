@@ -17,6 +17,7 @@ polAnn(dave,lab) :- true\n\
 owner(carol) :- true";
 function loadPolicy(pol) {
   document.getElementById("policy").value = pol;
+  document.getElementById("query").value = '';
 }
 </script>
 <?php 
@@ -48,17 +49,17 @@ function loadPolicy(pol) {
   echo '<input type="submit" class="gray" value="evaluates">';
   echo '<p> to : </p>';
   if ($query && $policy) {
-    $policyRemovedNewLines = preg_replace('/\n+/', " ", trim($policy));
-    $ret = shell_exec("python src/runWeb.py -i \"$policyRemovedNewLines\" -q \"$query\" 2>&1");
+    $policyFormatted = preg_replace('/\n+/', "<newline>", trim($policy));
+    $ret = shell_exec("python src/runWeb.py -i \"$policyFormatted\" -q \"$query\" 2>&1");
     $length = strlen('Error');
     if (substr($ret, 0, $length) === 'Error') {
       echo "<br><br><p style='color:red'>$ret</p>";
     } else {
-      echo "<p id='result'>$ret</p>";
+      echo "<p id='result'>$ret</p><br><br>";
     }
   }
   echo '</td></tr><tr><td>';
-  echo '<br><br><br><br><p>For details on BelLog\'s syntax see: <a href="http://github.com/ptsankov/bellog/">http://github.com/ptsankov/bellog/</a></p>';
+  echo '<br><br><p>For details on BelLog\'s syntax see: <a href="http://github.com/ptsankov/bellog/">http://github.com/ptsankov/bellog/</a></p>';
   echo '</td></tr></table>';
   echo '</form>';
 ?>
