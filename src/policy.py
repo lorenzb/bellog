@@ -19,13 +19,14 @@ class Policy:
         policy.checkNoEdbAtoms()
         policy.checkIdbArities()
         policy.checkStratified()
+        policy.checkFreeVars()
         return policy
     
     def postProcess(self):
         self.preds = {a.pred for a in Atom.atoms}
         self.idbs = {r.head.pred for r in self.rules}
         if len(self.idbs.intersection({'top', 'true', 'bot', 'false'})) > 0:
-            raise Exception('The predicates: ' + ', '.join({'top', 'true', 'bot', 'false'}.intersection(self.idbs)) + ' cannot appear in the rule heads')               
+            raise Exception('The predicates: ' + ', '.join({'top', 'true', 'bot', 'false'}.intersection(self.idbs)) + ' cannot appear in the rule heads')
         self.edbs = self.preds - self.idbs.union({'top', 'true', 'bot', 'false'})
             
     def checkNoEdbAtoms(self):
@@ -40,12 +41,18 @@ class Policy:
                     
     def checkQuery(self, atom):
         if atom.pred not in self.idbs.union({'false', 'bot', 'top', 'true'}):
-            raise Exception('The predicate ' + atom.pred + ' is not defined in the policy')        
+            raise Exception('The predicate ' + atom.pred + ' is not defined in the policy')
         definedArity = {len(a.args) for a in Atom.atoms if a.pred == atom.pred}.pop()
         if definedArity != len(atom.args):
-            raise Exception('Query arity mismatch. The arity of ' + str(atom) + ' in the given policy is ' + str(definedArity))        
+            raise Exception('Query arity mismatch. The arity of ' + str(atom) + ' in the given policy is ' + str(definedArity))
         if not atom.isGround():
             raise Exception('The query ' + str(atom) + ' is not ground.')
+        
+    def checkFreeVars(self):
+        for r in self.rules:
+            headFreeVars = {x for x in r.head.getArgs() if x.isupper()} - {x for x in r.body.getArgs() if x.isupper()}
+            if headFreeVars:
+                raise Exception('The head of rule ' + str(r) + ' contains the free variables: ' + ','.join(headFreeVars))
         
     def checkStratified(self):
         vertices = self.idbs.union({'false', 'bot' , 'top', 'true'})
@@ -58,9 +65,9 @@ class Policy:
             for r in {rule for rule in self.rules if rule.head.pred == v}:
                 (pos, neg) = r.body.getPreds() 
                 posPreds[v] = posPreds[v].union(pos)
-                negPreds[v] = negPreds[v].union(neg)        
+                negPreds[v] = negPreds[v].union(neg)
         for v in vertices:
-            edges[v] = list(posPreds[v].union(negPreds[v]))        
+            edges[v] = list(posPreds[v].union(negPreds[v]))
         for component in strongly_connected_components_path(vertices, edges):
             for v in component:
                 if negPreds[v].intersection(set(component)):
