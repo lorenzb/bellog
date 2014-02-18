@@ -38,8 +38,9 @@ The syntax of policy rules is given below:
 An example of a BelLog policy file is:
 
 ```
-p(X) :- (q(X) ^ !(s(X)))
+p(X) :- ( (q(X) -plus- r(X)) -top-> t(X) )
 q(a) :- true
+r(a) :- false
 s(a) :- bot
 ```
 
