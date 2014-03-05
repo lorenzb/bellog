@@ -1,0 +1,5 @@
+has_per(U,P) :- (ua(U,R) ^ pa(R,P))
+ua(alice,r1) :- true
+ua(bob,r2) :- true
+pa(r1,p1) :- true
+pa(r1,p2) :- true
