@@ -27,11 +27,11 @@ The syntax of policy rules is given below:
 <query>     := <value> | <atom> | !<query> | ~<query> | (<query> ^ ... ^ <query>) 
                | (<query> <binary op> <query>)
 <binary-op> := -plus- | -times- | -<value>-> 
-<atom>      := <pred>[(<arg>, ... , <arg>)]
-<pred>      := [a-z][a-z|A-Z|0-9]*
+<atom>      := <pred>[(<arg>, ... , <arg>)][@arg]
+<pred>      := [a-z][a-z|A-Z|0-9|_]*
 <arg>       := <const> | <var>
-<const>     := [a-z][a-z|A-Z|0-9]*
-<var>       := [A-Z][a-z|A-Z|0-9]*
+<const>     := [a-z][a-z|A-Z|0-9|_]*
+<var>       := [A-Z][a-z|A-Z|0-9|_]*
 <value>     := true | false | bot | top
 ```
 
