@@ -27,3 +27,7 @@
 -i trueOverride05.blg -q test | grep Query | grep false | wc -l
 -i trueOverride06.blg -q test | grep Query | grep bot | wc -l
 -i trueOverride07.blg -q test | grep Query | grep top | wc -l
+-i rbac.blg -q "has_per(alice,p1)" | grep Query | grep true | wc -l
+-i rbac.blg -q "has_per(alice,p2)" | grep Query | grep true | wc -l
+-i rbac.blg -q "has_per(bob,p1)" | grep Query | grep false | wc -l
+-i rbac.blg -q "has_per(bob,p2)" | grep Query | grep false | wc -l
