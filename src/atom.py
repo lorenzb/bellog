@@ -12,13 +12,15 @@ class Atom:
     @classmethod
     def fromElements(self, elements, add = True):
         atom = Atom()
-        atom.pred = elements[0]        
-        if len(elements) > 1:
-            # there are arguments
-            atom.args = elements[1][1:-1]
-        else:
-            # empty arguments
-            atom.args = []
+        atom.pred = elements[0]
+        atom.args = []
+        for l in elements[1:]:
+            if l[0] == '@':
+                # issuer argument
+                atom.args.insert(0,l[1])
+                # constant and variable arguments
+            if l[0] == '(':
+                atom.args = atom.args + l[1:-1]
         if add:
             Atom.atoms.add(atom)
         return atom
@@ -63,4 +65,4 @@ class Atom:
         s = self.pred
         if len(self.args) > 0:
             s = s + '(' + ','.join(self.args) + ')'
-        return s            
+        return s
