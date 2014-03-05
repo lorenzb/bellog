@@ -5,11 +5,11 @@
 </head>
 <body>
 <script type="text/javascript">
-var delegationPolicy = "has_access(U,F) :- (has_access(U,Y) ^ contains(fs,Y,F))\n\
-contains(fs,F1,F2) :- (contains(fs,F1,F) ^ contains(fs,F,F2))\n\
-contains(fs,music,jazz) :- true\n\
-contains(fs,music,pop) :- true\n\
-contains(fs,jazz,miles) :- true\n\
+var delegationPolicy = "has_access(U,F) :- (has_access(U,Y) ^ contains(Y,F)@fs)\n\
+contains(F1,F2)@fs :- (contains(F1,F)@fs ^ contains(F,F2)@fs)\n\
+contains(music,jazz)@fs :- true\n\
+contains(music,pop)@fs :- true\n\
+contains(jazz,miles)@fs :- true\n\
 has_access(alice,music) :- true\n\
 has_access(bob,pop) :-true";
 var delegationReq = "has_access(alice,jazz)";
@@ -54,8 +54,8 @@ function loadPolicy(pol, req) {
   }
   echo '</textarea>';
   echo '</td><td valign="top">';
-  echo '<input type="button" class="gray" name="loadDelegation" value="File Policy" onClick="loadPolicy(delegationPolicy, delegationReq);">';
   echo '<input type="button" class="gray" name="loadRBAC" value="RBAC Policy" onClick="loadPolicy(rbacPolicy, rbacReq);">';
+  echo '<input type="button" class="gray" name="loadDelegation" value="File Policy" onClick="loadPolicy(delegationPolicy, delegationReq);">';
   echo '<input type="button" class="gray" name="loadEx1" value="Example 1" onClick="loadPolicy(example1, req1);">';
   echo '<input type="button" class="gray" name="loadEx2" value="Example 2" onClick="loadPolicy(example2, req2);">';
   echo '<br></td></tr><tr class="request"><td>';
