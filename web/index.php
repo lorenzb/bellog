@@ -5,6 +5,12 @@
 </head>
 <body>
 <script type="text/javascript">
+var rbacPolicy = "has_per(U,P) :- (ua(U,R) ^ pa(R,P))\n\
+ua(alice,r1) :- true\n\
+ua(bob,r2) :- true\n\
+pa(r1,p1) :- true\n\
+pa(r1,p2) :- true";
+var rbacReq = "has_per(alice,p1)";
 var example1 = "p(X,Y) :- (p(X,Z) ^ p(Z,Y))\n\
 p(X,Y) :- q(X,Y)\n\
 q(a,b) :- true\n\
@@ -40,6 +46,7 @@ function loadPolicy(pol, req) {
   }
   echo '</textarea>';
   echo '</td><td valign="top">';
+  echo '<input type="button" class="gray" name="loadRBAC" value="RBAC Policy" onClick="loadPolicy(rbacPolicy, rbacReq);">';
   echo '<input type="button" class="gray" name="loadEx1" value="Example 1" onClick="loadPolicy(example1, req1);">';
   echo '<input type="button" class="gray" name="loadEx2" value="Example 2" onClick="loadPolicy(example2, req2);">';
   echo '<br></td></tr><tr class="request"><td>';
