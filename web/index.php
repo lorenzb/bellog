@@ -5,6 +5,14 @@
 </head>
 <body>
 <script type="text/javascript">
+var delegationPolicy = "has_access(U,F) :- (has_access(U,Y) ^ contains(fs,Y,F))\n\
+contains(fs,F1,F2) :- (contains(fs,F1,F) ^ contains(fs,F,F2))\n\
+contains(fs,music,jazz) :- true\n\
+contains(fs,music,pop) :- true\n\
+contains(fs,jazz,miles) :- true\n\
+has_access(alice,music) :- true\n\
+has_access(bob,pop) :-true";
+var delegationReq = "has_access(alice,jazz)";
 var rbacPolicy = "has_per(U,P) :- (ua(U,R) ^ pa(R,P))\n\
 ua(alice,r1) :- true\n\
 ua(bob,r2) :- true\n\
@@ -46,6 +54,7 @@ function loadPolicy(pol, req) {
   }
   echo '</textarea>';
   echo '</td><td valign="top">';
+  echo '<input type="button" class="gray" name="loadDelegation" value="File Policy" onClick="loadPolicy(delegationPolicy, delegationReq);">';
   echo '<input type="button" class="gray" name="loadRBAC" value="RBAC Policy" onClick="loadPolicy(rbacPolicy, rbacReq);">';
   echo '<input type="button" class="gray" name="loadEx1" value="Example 1" onClick="loadPolicy(example1, req1);">';
   echo '<input type="button" class="gray" name="loadEx2" value="Example 2" onClick="loadPolicy(example2, req2);">';
