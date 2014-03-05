@@ -14,7 +14,7 @@ class Grammar:
     plusOp = Literal('-plus-')
     timesOp = Literal('-times-') 
     pred = Word(srange("[a-z]"), srange("[a-zA-Z0-9_]") )
-    const = Word(srange("[a-z]"), srange("[a-zA-Z0-9_]") )
+    const = Word(srange("[a-z0-9]"), srange("[a-zA-Z0-9_]") )
     var = Word(srange("[A-Z]"), srange("[a-zA-Z0-9_]") )
     arg = Optional(comma) + (const | var)
     args = Group(left + arg + Optional(ZeroOrMore(comma + arg)) + right)
