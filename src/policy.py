@@ -17,7 +17,7 @@ class Policy:
             policy.rules.append(rule)
             policy.postProcess()
         policy.checkAtomsWithIssuers()
-        policy.checkNoEdbAtoms()
+        #policy.checkNoEdbAtoms()
         policy.checkIdbArities()
         policy.checkStratified()
         policy.checkFreeVars()

@@ -25,7 +25,7 @@ The syntax of policy rules is given below:
 ```
 <rule>      := <atom> :- <query>
 <query>     := <value> | <atom> | !<query> | ~<query> | (<query> ^ ... ^ <query>) 
-               | (<query> <binary op> <query>)
+               | (<query> <binary op> <query>) | (<query> < <query> > <query>)
 <binary-op> := -plus- | -times- | -<value>-> 
 <atom>      := <pred>[(<arg>, ... , <arg>)][@arg]
 <pred>      := [a-z][a-z|A-Z|0-9|_]*
@@ -34,6 +34,10 @@ The syntax of policy rules is given below:
 <var>       := [A-Z][a-z|A-Z|0-9|_]*
 <value>     := true | false | bot | top
 ```
+
+The ternary operator **p < q > r** is the standard if-then-else. The
+result of **p < q > r** is **p** if **q** evaluates to **true**, and
+otherwise it is **r**.
 
 An example of a BelLog policy file is:
 

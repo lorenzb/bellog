@@ -24,7 +24,7 @@ class Grammar:
     unaryOperator = neg | inv
     binaryOperator = overrideOp | plusOp | timesOp
     query = Forward()    
-    query << Or([atom, Group(unaryOperator + query), Group(left + query + OneOrMore(conj + query) + right), Group(left + query + binaryOperator + query + right)])
+    query << Or([atom, Group(unaryOperator + query), Group(left + query + OneOrMore(conj + query) + right), Group(left + query + binaryOperator + query + right), Group(left + query + Literal('<') + query + Literal('>') + query + right)])
         
     rule = Group(atom + arrow + query)
     policy = OneOrMore(rule)

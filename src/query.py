@@ -34,6 +34,8 @@ class Query:
                 return Query.fromElements(Query.getPlus(elements[1], elements[3]))
             elif elements[2] == '-times-':
                 return Query.fromElements(Query.getTimes(elements[1], elements[3]))
+            elif elements[2] == '<':
+                return Query.fromElements(['!', ['(', ['!', ['(', Query.getEq(elements[3], 'true'), '^', elements[1], ')'] ], '^', ['!', ['(', ['!', Query.getEq(elements[3], 'true')], '^', elements[5], ')'] ], ')' ] ])
         else:
             # atomic query
             query.operator = ''
