@@ -20,7 +20,9 @@ def main():
       
     xsb = XSB()
     try:
-        policy = Policy.fromString(open(bellogFilename, 'r').read().strip())
+        fileStr = open(bellogFilename, 'r').read().strip()
+        polStr = '\n'.join([l for l in fileStr.split('\n') if ':-' in l])
+        policy = Policy.fromString(polStr)
         xsb.loadPolicy(policy)
         print 'Query', queryString, ':', xsb.query(queryString)
         xsb.close()

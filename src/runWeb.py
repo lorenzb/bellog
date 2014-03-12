@@ -5,22 +5,24 @@ from xsb import XSB
 from policy import Policy
 
 def main():  
-    policyString = None
+    webStr = None
     queryString = None    
     opts, args = getopt.getopt(sys.argv[1:], 'i:q:', ['input', 'query'])
     for o, a in opts:
         if o == '-i':
-            policyString = a
+            webStr = a
         elif o == '-q':
             queryString = a
             
-    if policyString is None or queryString is None:
+    if webStr is None or queryString is None:
         print "Incorrect usage"
         sys.exit(-1)
 
     xsb = XSB()
     try:
-        policy = Policy.fromString(policyString.replace('<newline>', '\n'))
+        webStr = webStr.replace('<newline>', '\n')
+        polStr = '\n'.join([l for l in webStr.split('\n') if ':-' in l])
+        policy = Policy.fromString(polStr)
         xsb.loadPolicy(policy)
         print xsb.query(queryString)
         xsb.close()
