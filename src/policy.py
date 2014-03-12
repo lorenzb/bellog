@@ -18,7 +18,7 @@ class Policy:
             policy.postProcess()
         policy.checkAtomsWithIssuers()
         #policy.checkNoEdbAtoms()
-        policy.checkIdbArities()
+        policy.checkIdbArities()        
         policy.checkStratified()
         policy.checkFreeVars()
         return policy
@@ -79,7 +79,7 @@ class Policy:
                 raise Exception('The head of rule ' + str(r) + ' contains the free variables: ' + ','.join(headFreeVars))
         
     def checkStratified(self):
-        vertices = self.idbs.union({'false', 'bot' , 'top', 'true'})
+        vertices = self.idbs.union(self.edbs).union({'false', 'bot' , 'top', 'true'})
         edges = {}
         posPreds = {}
         negPreds = {}
@@ -91,7 +91,7 @@ class Policy:
                 posPreds[v] = posPreds[v].union(pos)
                 negPreds[v] = negPreds[v].union(neg)
         for v in vertices:
-            edges[v] = list(posPreds[v].union(negPreds[v]))
+            edges[v] = list(posPreds[v].union(negPreds[v]))        
         for component in strongly_connected_components_path(vertices, edges):
             for v in component:
                 if negPreds[v].intersection(set(component)):
