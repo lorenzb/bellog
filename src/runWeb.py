@@ -3,6 +3,7 @@ import getopt
 import sys
 from xsb import XSB
 from policy import Policy
+from utils import escapeCharacters
 
 def main():  
     webStr = None
@@ -22,9 +23,9 @@ def main():
     try:
         webStr = webStr.replace('<newline>', '\n')
         polStr = '\n'.join([l for l in webStr.split('\n') if ':-' in l])
-        policy = Policy.fromString(polStr)
+        policy = Policy.fromString(escapeCharacters(polStr))
         xsb.loadPolicy(policy)
-        print xsb.query(queryString)
+        print xsb.query(escapeCharacters(queryString))
         xsb.close()
     except Exception as e:
         print 'Error:', e

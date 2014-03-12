@@ -4,6 +4,7 @@ import os.path
 import sys
 from xsb import XSB
 from policy import Policy
+from utils import escapeCharacters
 
 def main():  
     bellogFilename = None
@@ -25,7 +26,7 @@ def main():
     fileStr = open(bellogFilename, 'r').read().strip()
     polStr = '\n'.join([l for l in fileStr.split('\n') if ':-' in l])
     try:                
-        policy = Policy.fromString(polStr)
+        policy = Policy.fromString(escapeCharacters(polStr))
     except Exception as e:
         print 'Error:', e
         sys.exit(-1)                  
@@ -34,7 +35,7 @@ def main():
         xsb = XSB()    
         try:                    
             xsb.loadPolicy(policy)        
-            print 'Query', queryString, ':', xsb.query(queryString)
+            print 'Query', queryString, ':', xsb.query(escapeCharacters(queryString))
             xsb.close()
         except Exception as e:
             print 'Error:', e
@@ -57,3 +58,4 @@ def main():
 
 if __name__ == '__main__':                                                                                                                     
     main()
+    
