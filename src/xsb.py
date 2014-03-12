@@ -31,7 +31,7 @@ class XSB:
             
         # tell XSB that we're done loading rules
         self.xsb.sendcontrol('d')
-        self.xsb.expect('yes')
+        self.xsb.expect('yes')      
         
     def query(self, queryString):
         try:

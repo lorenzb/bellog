@@ -1,35 +1,59 @@
 #!/usr/bin/python
 import getopt
+import os.path
 import sys
 from xsb import XSB
 from policy import Policy
 
 def main():  
     bellogFilename = None
-    queryString = None    
-    opts, args = getopt.getopt(sys.argv[1:], 'i:q:', ['input', 'query'])
+    queryString = None
+    datalogFilename = None    
+    opts, args = getopt.getopt(sys.argv[1:], 'i:q:o:', ['input', 'query'])
     for o, a in opts:
         if o == '-i':
             bellogFilename = a
         elif o == '-q':
             queryString = a
+        elif o == '-o':
+            datalogFilename = a
             
-    if bellogFilename is None or queryString is None:
-        print 'Usage: python', sys.argv[0], '-i <BelLog file> -q <query>'
+    if bellogFilename is None and (queryString is None or datalogFilename is None):
+        print 'Usage: python', sys.argv[0], '-i <BelLog file> -q <query> [-o <Datalog filename>]'
         sys.exit(-1)
-      
-    xsb = XSB()
-    try:
-        fileStr = open(bellogFilename, 'r').read().strip()
-        polStr = '\n'.join([l for l in fileStr.split('\n') if ':-' in l])
-        policy = Policy.fromString(polStr)        
-        xsb.loadPolicy(policy)
-        print 'Query', queryString, ':', xsb.query(queryString)
-        xsb.close()
+       
+    fileStr = open(bellogFilename, 'r').read().strip()
+    polStr = '\n'.join([l for l in fileStr.split('\n') if ':-' in l])
+    try:                
+        policy = Policy.fromString(polStr)
     except Exception as e:
         print 'Error:', e
-        xsb.close()
-        sys.exit(-1)                
+        sys.exit(-1)                  
+       
+    if queryString is not None:
+        xsb = XSB()    
+        try:                    
+            xsb.loadPolicy(policy)        
+            print 'Query', queryString, ':', xsb.query(queryString)
+            xsb.close()
+        except Exception as e:
+            print 'Error:', e
+            sys.exit(-1)
+            xsb.close()
+                  
+    if datalogFilename is not None:
+        if os.path.isfile(datalogFilename):
+            msg = 'Override ' + datalogFilename + '?'
+            shall = True if raw_input("%s (y/N) " % msg).lower() == 'y' else False
+            if not shall:
+                sys.exit(-1)
+        outFile = open(datalogFilename, 'w')        
+        for rule in policy.rules:
+            for datalogRule in rule.toDatalogRules():
+                outFile.write(datalogRule + '.\n') 
+        for datalogRule in XSB.STATIC_RULES:
+            outFile.write(datalogRule + '.\n')        
+        outFile.close()            
 
 if __name__ == '__main__':                                                                                                                     
     main()
