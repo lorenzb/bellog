@@ -13,6 +13,10 @@ class Rule:
         rule.body = Query.fromElements(elements[1])
         return rule
     
+    def inlineIssuer(self):
+        self.head.inlineIssuer()
+        self.body.inlineIssuer()
+    
     def toDatalogRules(self):
         if self.body.operator == '':
             ruleTop = str(self.head.toDatalog('top')) + ' :- ' + str(self.body.subqueries[0].toDatalog('top'))

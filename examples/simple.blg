@@ -1,4 +1,4 @@
-p(X,Y) :- (q(X,Y) ^ r(X,Z,Y))
-q(X,Y) :- p(X,Y)
-r(X,Z,Y) :- w(X,Y)
+p(X,Y)@0 :- (q(X,Y) ^ r(X,Y))
+q(X,Y) :- p(X,Y)@1
+r(X,Y) :- w(X,Y)
 w(a,b) :- true

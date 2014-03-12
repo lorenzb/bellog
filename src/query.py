@@ -47,6 +47,10 @@ class Query:
             allVars = allVars + subquery.getArgs()
         return allVars
     
+    def inlineIssuer(self):
+        for subquery in self.subqueries:
+            subquery.inlineIssuer()
+            
     def getPreds(self):
         posPreds = set()
         negPreds = set()

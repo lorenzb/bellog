@@ -14,24 +14,23 @@ class XSB:
                     'false_top :- tnot(top_top)', 
                     'false_bot :- tnot(top_top)']
     
-    def __init__(self):       
+    def __init__(self):
         self.xsb = pexpect.spawn(config['XSB_PATH'])
         
-    def loadPolicy(self, policy):                            
+    def loadPolicy(self, policy):
         # translate the rules to Datalog and load them into XSB
-        self.policy = policy    
+        self.policy = policy
         self.xsb.sendline('[user].')
         self.xsb.sendline(':- auto_table.')
         for rule in policy.rules:
             for datalogRule in rule.toDatalogRules():
                 self.xsb.sendline(datalogRule + '.')
-                
         # load also the static datalog rules
-        for datalogRule in XSB.STATIC_RULES:           
+        for datalogRule in XSB.STATIC_RULES:
             self.xsb.sendline(datalogRule + '.')
             
         # tell XSB that we're done loading rules
-        self.xsb.sendcontrol('d')    
+        self.xsb.sendcontrol('d')
         self.xsb.expect('yes')
         
     def query(self, queryString):
@@ -39,7 +38,10 @@ class XSB:
             atom = Atom.fromElements(Grammar.parseAtom(queryString), add=False)
         except Exception:
             raise Exception('Could not parse the query ' + queryString)
+        atom.inlineIssuer()
         self.policy.checkQuery(atom)
+        self.xsb.sendline('set_prolog_flag(unknown,fail).')
+        self.xsb.expect('yes')
         self.xsb.sendline(str(atom.toDatalog('bot')) + '.')
         geqBot = self.xsb.expect(['yes', 'no']) == 0
         self.xsb.sendline(str(atom.toDatalog('top')) + '.')
