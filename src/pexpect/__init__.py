@@ -454,13 +454,13 @@ class spawn(object):
         self.searchwindowsize = searchwindowsize
         # Delay used before sending data to child. Time in seconds.
         # Most Linux machines don't like this to be below 0.03 (30 ms).
-        self.delaybeforesend = 0.001
+        self.delaybeforesend = 0.0001
         # Used by close() to give kernel time to update process status.
         # Time in seconds.
-        self.delayafterclose = 0.001
+        self.delayafterclose = 0.0001
         # Used by terminate() to give kernel time to update process status.
         # Time in seconds.
-        self.delayafterterminate = 0.001
+        self.delayafterterminate = 0.0001
         self.softspace = False
         self.name = '<' + repr(self) + '>'
         self.closed = True
@@ -789,7 +789,7 @@ class spawn(object):
                 return False
             if timeout is not None:
                 timeout = end_time - time.time()
-            time.sleep(0.001)
+            time.sleep(0.0001)
 
     def getecho(self):
         '''This returns the terminal echo mode. This returns True if echo is

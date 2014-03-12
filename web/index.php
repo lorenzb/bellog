@@ -5,6 +5,34 @@
 </head>
 <body>
 <script type="text/javascript">
+var compositePolicy = "The administrator first checks if the project leaders-Ann and Fred-agree on the pub attribute\n\
+pub(F) :- (pub(F)@ann -plus- pub(F)@fred)\n\n\
+The policy of the project leader Piet grants access to his researchers to any project file:\n\
+pol(S,F)@piet :- (researcher(S)@piet ^ prj_file(F)@piet)\n\n\
+The policy of Ann is\n\
+pol(ann,F)@ann :- prj_file(F)@ann\n\
+pol(S1,F)@ann :- (pol(S2,F)@ann ^ give_access(S1,F)@S2)\n\
+The first rule grants Ann access to any project file F, and the second rule states that any subject S2 with access to F may delegate this access to any subject S1 by issuing a give_access attribute.\n\n\
+To define for which requests are the policies of Piet and Ann applicable, admin issues the following rules:\n\
+perm_piet(S,F) :- (pol(S,F)@piet < contains(projects,F) > false)\n\
+perm_ann(S,F) :- (pol(S,F)@ann < contains(project_ann,F) > false)\n\
+The first rules states that Piet's and Ann's policy are used only for requests to files contained in the folder 'projects' and, respectively, 'project_ann'.\n\n\
+Admin composes the policies of Piet and Ann using the agree operator:\n\
+pol_leaders(S,F) :- (perm_piet(S,F) -plus- perm_ann(S,F))\n\n\
+Since this composition may result in gaps or conflicts, admin issues the following policy:\n\
+pol(S,F) :- ((pol_leaders(S,F) -top-> prj_leader(S)) -bot-> pub(F)@admin)\n\
+If there is a conflict, then this policy grants access only to policy leaders. If there is no applicable policy, then access is granted only to public files and folders.\n\n\
+Finally, the administrator issues the policy:\n\
+pol(S,F) :- (contains(F,F) ^ pol(S,X))\n\
+which recursively propagates grant decisions to subfolders\n\n\
+The contains relation is recursively defined as follows:\n\
+contains(F1,F2) :- subfolder(F1,F2)@fs\n\
+contains(F1,F3) :- (contains(F1,F2) ^ contains(F2,F3))\n\
+subfolder(projects,project_piet)@fs :- true\n\
+subfolder(projects,project_ann)@fs :- true\n\
+subfolder(project_piet,foo)@fs :- true\n\
+subfolder(project_ann,bar)@fs :- true";
+var compositeReq = "pol(carol,foo)";
 var delegationPolicy = "has_access(U,F) :- (has_access(U,Y) ^ contains(Y,F)@fs)\n\
 contains(F1,F2)@fs :- (contains(F1,F)@fs ^ contains(F,F2)@fs)\n\
 contains(music,jazz)@fs :- true\n\
@@ -54,6 +82,7 @@ function loadPolicy(pol, req) {
   }
   echo '</textarea>';
   echo '</td><td valign="top">';
+  echo '<input type="button" class="gray" name="loadComposite" value="Composite Policy" onClick="loadPolicy(compositePolicy, compositeReq);">';
   echo '<input type="button" class="gray" name="loadRBAC" value="RBAC Policy" onClick="loadPolicy(rbacPolicy, rbacReq);">';
   echo '<input type="button" class="gray" name="loadDelegation" value="File Policy" onClick="loadPolicy(delegationPolicy, delegationReq);">';
   echo '<input type="button" class="gray" name="loadEx1" value="Example 1" onClick="loadPolicy(example1, req1);">';
