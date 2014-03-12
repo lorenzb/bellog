@@ -30,8 +30,8 @@ The syntax of policy rules is given below:
 <atom>      := <pred>[(<arg>, ... , <arg>)][@arg]
 <pred>      := [a-z][a-z|A-Z|0-9|_]*
 <arg>       := <const> | <var>
-<const>     := [a-z][a-z|A-Z|0-9|_]*
-<var>       := [A-Z][a-z|A-Z|0-9|_]*
+<const>     := [a-z][a-z|A-Z|0-9|_|']*
+<var>       := [A-Z][a-z|A-Z|0-9|_|']*
 <value>     := true | false | bot | top
 ```
 
