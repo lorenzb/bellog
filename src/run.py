@@ -5,6 +5,8 @@ import sys
 from xsb import XSB
 from policy import Policy
 from utils import escapeCharacters
+from grammar import Grammar
+from atom import Atom
 
 def main():  
     bellogFilename = None
@@ -27,18 +29,23 @@ def main():
     polStr = '\n'.join([l for l in fileStr.split('\n') if ':-' in l])
     try:                
         policy = Policy.fromString(escapeCharacters(polStr))
+        if queryString is not None:
+            query = Atom.fromElements(Grammar.parseAtom(escapeCharacters(queryString)))
+        policy.processPolicy()            
     except Exception as e:
-        print 'Error:', e
-        sys.exit(-1)                  
+        print 'Error parsing the policy:', e
+        sys.exit(-1)                             
        
-    if queryString is not None:
+       
+    if queryString is not None:        
         xsb = XSB()    
-        try:                    
+        try:
+            policy.checkQuery(query)                    
             xsb.loadPolicy(policy)        
-            print 'Query', queryString, ':', xsb.query(escapeCharacters(queryString))
+            print 'Query', queryString, ':', xsb.query(query)
             xsb.close()
         except Exception as e:
-            print 'Error:', e
+            print 'Error loading the policy:', e
             sys.exit(-1)
             xsb.close()
                   

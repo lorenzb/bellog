@@ -5,13 +5,12 @@ class Atom:
     
     FRESH_COUNT = 0
     atoms = set()
-    issuerMap = {}
        
     def __init__(self):
         self.issuer = None
         
     @classmethod
-    def fromElements(self, elements, add = True):
+    def fromElements(self, elements):
         atom = Atom()
         atom.pred = elements[0]
         atom.args = []
@@ -23,8 +22,7 @@ class Atom:
                 # constant and variable arguments
             if l[0] == '(':
                 atom.args = atom.args + l[1:-1]
-        if add:
-            Atom.atoms.add(atom.clone())
+        Atom.atoms.add(atom)
         return atom
             
     @classmethod
@@ -36,13 +34,15 @@ class Atom:
         atom = Atom()
         atom.pred = Atom.freshPredSymbol()
         atom.args = copy.deepcopy(args)
+        Atom.atoms.add(atom)
         return atom
     
     def clone(self):
         c = Atom()
         c.pred = copy.deepcopy(self.pred)
         c.args = copy.deepcopy(self.args)
-        c.issuer = copy.deepcopy(self.issuer) 
+        c.issuer = copy.deepcopy(self.issuer)
+        Atom.atoms.add(c) 
         return c
 
     def toDatalog(self, kind):
@@ -65,19 +65,17 @@ class Atom:
     def isGround(self):
         return len({x for x in self.args if x.isupper()}) == 0
 
-    def inlineIssuer(self):
-        if self.pred not in Atom.issuerMap.keys():
-            return 
-        if Atom.issuerMap[self.pred] == 'no':
-            return
-        if self.issuer == None:
+    def inlineIssuerToPredicate(self):
+        if self.issuer is None:
             self.issuer = 'admin'
-        if Atom.issuerMap[self.pred] == 'pred':
-            self.pred = self.pred + '_' + self.issuer
-        elif Atom.issuerMap[self.pred] == 'args':
-            self.args.insert(0,self.issuer)
+        self.pred = self.pred + '_' + self.issuer
         self.issuer = None
-            
+        
+    def inlineIssuerToArguments(self):
+        if self.issuer is None:
+            self.issuer = 'admin'
+        self.args.insert(0,self.issuer)
+        self.issuer = None
         
     @classmethod
     def freshPredSymbol(cls):

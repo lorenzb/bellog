@@ -33,13 +33,7 @@ class XSB:
         self.xsb.sendcontrol('d')
         self.xsb.expect('yes')      
         
-    def query(self, queryString):
-        try:
-            atom = Atom.fromElements(Grammar.parseAtom(queryString), add=False)
-        except Exception:
-            raise Exception('Could not parse the query ' + queryString)
-        atom.inlineIssuer()
-        self.policy.checkQuery(atom)
+    def query(self, atom):
         self.xsb.sendline('set_prolog_flag(unknown,fail).')
         self.xsb.expect('yes')
         self.xsb.sendline(str(atom.toDatalog('bot')) + '.')

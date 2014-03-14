@@ -15,48 +15,39 @@ class Policy:
         for ruleElements in elements:
             rule = Rule.fromElements(ruleElements)
             policy.rules.append(rule)
-            policy.postProcess()
-        policy.checkAtomsWithIssuers()
-        #policy.checkNoEdbAtoms()
-        policy.checkIdbArities()        
-        policy.checkStratified()
-        policy.checkFreeVars()
         return policy
     
+    def processPolicy(self):
+        self.postProcess()
+        self.inlineIssuersInAtoms()
+        self.checkIdbArities()        
+        self.checkStratified()
+        self.checkFreeVars()
+    
     def postProcess(self):
-        self.preds = {a.pred for a in Atom.atoms}
-        self.idbs = {r.head.pred for r in self.rules}
-        if len(self.idbs.intersection({'top', 'true', 'bot', 'false'})) > 0:
-            raise Exception('The predicates: ' + ', '.join({'top', 'true', 'bot', 'false'}.intersection(self.idbs)) + ' cannot appear in the rule heads')
-        self.edbs = self.preds - self.idbs.union({'top', 'true', 'bot', 'false'})
+        #self.preds = {a.pred for a in Atom.atoms}
+        #self.idbs = {r.head.pred for r in self.rules}
+        idbs = {r.head.pred for r in self.rules}
+        if len(idbs.intersection({'top', 'true', 'bot', 'false'})) > 0:
+            raise Exception('The predicates: ' + ', '.join({'top', 'true', 'bot', 'false'}.intersection(idbs)) + ' cannot appear in the rule heads')
+        #self.edbs = self.preds - self.idbs.union({'top', 'true', 'bot', 'false'})
         
-    def checkAtomsWithIssuers(self):
-        for p in self.idbs:
-            issuers = {a.issuer for a in Atom.atoms if a.pred == p and a.issuer is not None}
+    def inlineIssuersInAtoms(self):
+        for p in {x.pred for x in Atom.atoms}:
+            atoms = {x for x in Atom.atoms if x.pred == p}
+            issuers = {x.issuer for x in atoms if x.issuer is not None}
             if len(issuers) == 0:
-                Atom.issuerMap[p] = 'no'
+                continue
+            variablesUsedAsIssuers = len({x for x in issuers if x.isupper()}) > 0
+            if variablesUsedAsIssuers:
+                for a in atoms:
+                    a.inlineIssuerToArguments()
             else:
-                variablesUsedAsIssuers = len({x for x in issuers if x.isupper()}) > 0
-                if variablesUsedAsIssuers:
-                    Atom.issuerMap[p] = 'args'  
-                else:
-                    Atom.issuerMap[p] = 'pred'
-                    self.idbs = self.idbs - {p}
-                    self.idbs = self.idbs.union({p + '_' + x for x in issuers})
-                    if {a for a in Atom.atoms if a.pred == p and a.issuer is None}:
-                        self.idbs.add(p + '_admin')
-        # processed all atoms, now we can inline all issuers in the atoms
-        for r in self.rules:
-            r.inlineIssuer()
-        for a in Atom.atoms:
-            a.inlineIssuer()
-                    
-    def checkNoEdbAtoms(self):
-        if len(self.edbs) > 0:
-            raise Exception('The following predicate symbols have not been defined: ' + ', '.join(self.edbs))
+                for a in atoms:
+                    a.inlineIssuerToPredicate()        
         
     def checkIdbArities(self):
-        for pred in self.idbs:
+        for pred in {a.pred for a in Atom.atoms}:
             arities = {len(a.args) for a in Atom.atoms if a.pred == pred}
             if len(arities) != 1:
                 raise Exception('The predicate symbol ' + pred + ' is used with multiple arities: ' + ','.join(map(str, arities)))
@@ -64,10 +55,12 @@ class Policy:
     def checkQuery(self, atom):
         if not atom.isGround():
             raise Exception('The query ' + str(atom) + ' is not ground.')
-        if atom.pred not in self.idbs.union({'false', 'bot', 'top', 'true'}):
+        if atom.pred not in {a.pred for a in Atom.atoms}.union({'false', 'bot', 'top', 'true'}):
+            raise Exception('The predicate ' + atom.pred + ' is not defined anywhere in the policy')
+        #if atom.pred not in self.idbs.union({'false', 'bot', 'top', 'true'}):
             #raise Exception('The predicate ' + atom.pred + ' is not defined in the policy')
-            self.edbs.add(atom.pred)
-            return
+            #self.edbs.add(atom.pred)
+            #return
         definedArity = {len(a.args) for a in Atom.atoms if a.pred == atom.pred}.pop()
         if definedArity != len(atom.args):
             raise Exception('Query arity mismatch. The arity of ' + str(atom) + ' in the given policy is ' + str(definedArity))
@@ -79,7 +72,7 @@ class Policy:
                 raise Exception('The head of rule ' + str(r) + ' contains the free variables: ' + ','.join(headFreeVars))
         
     def checkStratified(self):
-        vertices = self.idbs.union(self.edbs).union({'false', 'bot' , 'top', 'true'})
+        vertices = {x.pred for x in Atom.atoms}.union({'false', 'bot' , 'top', 'true'})
         edges = {}
         posPreds = {}
         negPreds = {}
