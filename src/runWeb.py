@@ -4,6 +4,8 @@ import sys
 from xsb import XSB
 from policy import Policy
 from utils import escapeCharacters
+from atom import Atom
+from grammar import Grammar
 
 def main():  
     webStr = None
@@ -24,13 +26,17 @@ def main():
         webStr = webStr.replace('<newline>', '\n')
         polStr = '\n'.join([l for l in webStr.split('\n') if ':-' in l])
         policy = Policy.fromString(escapeCharacters(polStr))
+        query = Atom.fromElements(Grammar.parseAtom(escapeCharacters(queryString)))
+        policy.processPolicy()   
+        policy.checkQuery(query)     
         xsb.loadPolicy(policy)
         print xsb.query(escapeCharacters(queryString))
         xsb.close()
     except Exception as e:
         print 'Error:', e
         xsb.close()
-        sys.exit(-1)             
+        sys.exit(-1)
+         
 
 if __name__ == '__main__':
     main()
