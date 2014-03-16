@@ -30,7 +30,7 @@ def main():
         policy.processPolicy()   
         policy.checkQuery(query)     
         xsb.loadPolicy(policy)
-        print xsb.query(escapeCharacters(query))
+        print xsb.query(query)
         xsb.close()
     except Exception as e:
         print 'Error:', e
