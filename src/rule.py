@@ -20,8 +20,8 @@ class Rule:
             return [ruleTop, ruleBot]        
         elif self.body.operator == '!':
             freshAtom = Atom.freshWithArgs(self.body.getArgs())                             
-            ruleTop = str(self.head.toDatalog('top')) + ' :- tnot(' + str(freshAtom.toDatalog('bot')) + ')'
-            ruleBot = str(self.head.toDatalog('bot')) + ' :- tnot(' + str(freshAtom.toDatalog('top')) + ')'
+            ruleTop = str(self.head.toDatalog('top')) + ' :- not_exists(' + str(freshAtom.toDatalog('bot')) + ')'
+            ruleBot = str(self.head.toDatalog('bot')) + ' :- not_exists(' + str(freshAtom.toDatalog('top')) + ')'
             subqueryRule = Rule()
             subqueryRule.head = freshAtom
             subqueryRule.body = self.body.subqueries[0]             
