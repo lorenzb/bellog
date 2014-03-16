@@ -1,0 +1,8 @@
+chained(U) :- owner(U)
+chained(U) :- (chained(S) ^ says_grant(S,U) ^ !revoked(S,U)@db)
+permit(U) :- (chained(U) -bot-> (owner(S) ^ says_grant(S,U) ^ (revoked(S,U)@db-bot->true)))
+owner(ole) :- true
+says_grant(ole,jane) :- true
+says_grant(jane,fred) :- true
+revoked(ole,jane)@db :- bot
+revoked(jane,fred)@db :- false
