@@ -4,6 +4,8 @@ Tools for the four-valued logic programming language BelLog.
 
 For details of the language see: http://dx.doi.org/10.3929/ethz-a-010045530
 
+An online policy interpreter is available at www.bellog.org
+
 ## INSTALL
 
 To use the BelLog interpreter you need to install:
