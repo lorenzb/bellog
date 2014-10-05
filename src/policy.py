@@ -38,7 +38,7 @@ class Policy:
             issuers = {x.issuer for x in atoms if x.issuer is not None}
             if len(issuers) == 0:
                 continue
-            variablesUsedAsIssuers = len({x for x in issuers if x.isupper()}) > 0
+            variablesUsedAsIssuers = len({x for x in issuers if x[0].isupper()}) > 0
             if variablesUsedAsIssuers:
                 for a in atoms:
                     a.inlineIssuerToArguments()
