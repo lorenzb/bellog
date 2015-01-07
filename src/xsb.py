@@ -5,14 +5,14 @@ from grammar import Grammar
 
 class XSB:
     
-    STATIC_RULES = ['true_bot', 
+    STATIC_RULES = ['true_bot',
                     'true_top',
-                    'bot_bot', 
-                    'top_top', 
-                    'bot_top :- tnot(top_top)', 
-                    'top_bot :- tnot(bot_bot)', 
-                    'false_top :- tnot(top_top)', 
-                    'false_bot :- tnot(top_top)']
+                    'bot_bot',
+                    'top_top',
+                    'bot_top :- \+(top_top)',
+                    'top_bot :- \+(bot_bot)',
+                    'false_top :- \+(top_top)',
+                    'false_bot :- \+(top_top)']
     
     def __init__(self):
         self.xsb = pexpect.spawn(config['XSB_PATH'])
